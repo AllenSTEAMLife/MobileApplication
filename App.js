@@ -11,6 +11,7 @@ import NotificationScreen from './scenes/NotificationScreen';
 import ServiceScreen from './scenes/ServiceScreen';
 import CalendarScreen from './scenes/calendarScreen';
 import SettingsScreen from './scenes/SettingsScreen';
+import AsyncStorageLib from '@react-native-async-storage/async-storage';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
