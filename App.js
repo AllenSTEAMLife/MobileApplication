@@ -1,21 +1,54 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as Font from 'expo-font';
+import { useFonts } from 'expo-font';
+import HomePage from './scenes/HomePage';
+import NotificationScreen from './scenes/NotificationScreen';
+import ServiceScreen from './scenes/ServiceScreen';
+import CalendarScreen from './scenes/calendarScreen';
+import SettingsScreen from './scenes/SettingsScreen';
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-export default function App() {
+const TabNav = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+  <Tab.Navigator screenOptions={{headerShown: false}} >
+      <Tab.Screen name="Home" component={HomePage} options={{tabBarLabel:"", tabBarIcon: (focused, tintColor) => (<Image style={{ width:35, height: 35, marginTop: 10 }} source={require('./assets/images/steamlogoblackonwhite.png')} /> )}}/>
+      <Tab.Screen name="Notifications" component={NotificationScreen} options={{tabBarLabel:"Notifications", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/notif.png')} /> )}}/>
+      <Tab.Screen name="Service"  component={ServiceScreen} options={{tabBarLabel:"Service", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/listings.png')} /> )}}/>
+      <Tab.Screen name="Calendar"  component={CalendarScreen} options={{tabBarLabel:"Calendar", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/calendar.png')} /> )}}/>
+      <Tab.Screen name="Settings"  component={SettingsScreen} options={{tabBarLabel:"Settings", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/feedback.png')} /> )}}/>
+  </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  const [loaded] = useFonts({
+    'Montserrat-ExtraBold': require('./assets/fonts/Montserrat-ExtraBold.ttf'),
+    'Montserrat-Medium': require('./assets/fonts/Montserrat-Medium.ttf'),
+    'Montserrat-SemiBold': require('./assets/fonts/Montserrat-SemiBold.ttf'),
+  });
+  
+  if (!loaded) {
+    return null;
+  }
+  
+  return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='TabNav' screenOptions={{headerShown: false}}>
+          <Stack.Screen name='TabNav' component={TabNav}/>
+          {/* <Stack.Screen name='Notification' component={NotificationSettings}/> */}
+          {/* <Stack.Screen name='Feedback' component={feedbackScreen}/> */}
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+
+
+
+
+
