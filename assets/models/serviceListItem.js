@@ -10,7 +10,7 @@ const ServiceListItem = (props) => {
             </View>
             <View style={styles.viewStyle} >
                 <Text style={styles.titleStyle}>{props.title}</Text>
-                <Text style={styles.messageStyle}>{props.message}</Text>
+                <Text numberOfLines={3} style={styles.messageStyle}>{props.message}</Text>
             </View>
         </View>
     )
@@ -24,14 +24,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         marginRight: 7,
         marginBottom: 7,
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 0,
-            height: 3
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-        elevation: 7,
+        
     },
     iconStyle: {
         width: 41,

@@ -14,7 +14,7 @@ const NotificationScreen = () => {
     };
     test = new notification('Event', 'Homecoming Thursday!', 'Test event for the purposes of this page. Do not actually show up for a fake Homecoming this Thursday. -AISD staff/Aryan Bhuta');
     testTwo = new notification('Service', 'Signed up for Service Hours', 'Hey User! You’ve signed up for “Service Hour appointment” today! Don’t forget to show up and earn those hours!');
-    testThree = new notification('Campus', 'Applications for new stuff', 'The AISD office of Secret Services is proud to present applications for clandestine oper- ahem, office workers. Bhuta, Aryan Bhuta, OSS director');
+    testThree = new notification('Campus', 'Applications for new stuff', 'The AISD office of                                          Secret Services is proud to present applications for clandestine oper- ahem, office workers. Bhuta, Aryan Bhuta, OSS director');
     s = [test, testTwo, testThree];
     notifications = [];
     for (let i = 0; i < s.length; i++) {
@@ -47,14 +47,15 @@ const NotificationScreen = () => {
                         }}
                         currentIndex={tabIndex}
                         onChange={handleTabChange}
-
+                        textStyle={{fontSize: 15}}
                     />
+                    
                     <FlatList 
                     style = {{flex: 5}}
                     data = {notifications}
                     renderItem={({item}) => <NotifcationItem title={item.title} message = {item.message} type={item.type}/>} 
+                    keyExtractor = {(item, index) => index.toString()}
                     />
-                    
                 </View>
         </LinearGradient>
     )

@@ -13,8 +13,8 @@ const NotifcationItem=(props) => {
                 <Text style={styles.iconTextStyle}>{props.type.charAt(0)}</Text>
             </View>
             <View style={styles.viewStyle} >
-                <Text style={styles.titleStyle}>{props.title}</Text>
-                <Text style={styles.messageStyle}>{props.message}</Text>
+                <Text  style={styles.titleStyle}>{props.title}</Text>
+                <Text numberOfLines={3} style={styles.messageStyle}>{props.message}</Text>
             </View>
         </View>
     );
@@ -25,17 +25,11 @@ const styles = StyleSheet.create({
         height: 111,
         backgroundColor: Colors.WHITE,
         borderRadius: 10,
-        paddingLeft: 10,
+        padding:10,
+        paddingBottom: 10,
         marginRight: 7,
         marginBottom: 7,
-        // shadowColor: '#000000',
-        // shadowOffset: {
-        //     width: 0,
-        //     height: 3
-        // },
-        // shadowOpacity: 0.3,
-        // shadowRadius: 5,
-        // elevation: 7,
+       
     },
     iconStyle: {
         width: 41,
@@ -64,6 +58,7 @@ const styles = StyleSheet.create({
     },
     messageStyle: {
         fontSize: 14,
+        
     }
     
 });

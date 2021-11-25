@@ -11,10 +11,23 @@ import NotificationScreen from './scenes/NotificationScreen';
 import ServiceScreen from './scenes/ServiceScreen';
 import CalendarScreen from './scenes/calendarScreen';
 import SettingsScreen from './scenes/SettingsScreen';
+import LoginScreen from './scenes/SignInScreen';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import HomePageSettings from './scenes/HomePageSettings';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
+const SettingsStack = () => {
+  return(
+  <Stack.Navigator initialRouteName='Settings' screenOptions={{headerShown: false}}>
+    <Stack.Screen name='TabNav' component={TabNav}/>
+    <Stack.Screen name='Settings' component={SettingsScreen}/>
+    <Stack.Screen name='LogIn' component={LoginScreen}/>
+          <Stack.Screen name='Notification' component={NotificationScreen}/>
+          <Stack.Screen name='HomePageSettings' component={HomePageSettings}/>
+          {/* <Stack.Screen name='Feedback' component={feedbackScreen}/> */}
+        </Stack.Navigator>
+        );
+}
 const TabNav = () => {
   return (
   <Tab.Navigator screenOptions={{headerShown: false}} >
@@ -40,11 +53,13 @@ export default function App() {
   
   return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='TabNav' screenOptions={{headerShown: false}}>
-          <Stack.Screen name='TabNav' component={TabNav}/>
-          {/* <Stack.Screen name='Notification' component={NotificationSettings}/> */}
-          {/* <Stack.Screen name='Feedback' component={feedbackScreen}/> */}
-        </Stack.Navigator>
+        <Tab.Navigator screenOptions={{headerShown: false}} >
+      <Tab.Screen name="Home" component={HomePage} options={{tabBarLabel:"", tabBarIcon: (focused, tintColor) => (<Image style={{ width:35, height: 35, marginTop: 10 }} source={require('./assets/images/steamlogoblackonwhite.png')} /> )}}/>
+      <Tab.Screen name="Notifications" component={NotificationScreen} options={{tabBarLabel:"Notifications", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/notif.png')} /> )}}/>
+      <Tab.Screen name="Service"  component={ServiceScreen} options={{tabBarLabel:"Service", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/listings.png')} /> )}}/>
+      <Tab.Screen name="Calendar"  component={CalendarScreen} options={{tabBarLabel:"Calendar", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/calendar.png')} /> )}}/>
+      <Tab.Screen name="Settings"  component={SettingsStack} options={{tabBarLabel:"Settings", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/feedback.png')} /> )}}/>
+  </Tab.Navigator>
       </NavigationContainer>
     );
   }

@@ -11,44 +11,38 @@ import {
     Pressable,
     FlatList,
     Switch,
-    Linking
+    Linking,
+    ImagePickerIOS,
+    TouchableOpacity
 } from 'react-native';
 
 import Colors from '../assets/colors/Colors';
+import { auth, signInWithGoogle } from '../firebase';
+import UserPermissions from '../assets/utilities/UserPermissions';
+import * as ImagePicker from 'expo-image-picker'
+import { storage } from '../firebase';
+import {ref} from "firebase/storage";
 
 
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { createUserWithEmailAndPassword  } from '@firebase/auth';
-import { initializeApp } from '@firebase/app';
+
 const SettingsScreen = ({navigation}) => {
     
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-    const provider = new GoogleAuthProvider();
-    const auth = getAuth();
-    const email = 'test@test.org';
-    const password = 'testPassword';
-    const handleSignIn = () => {
-        signInWithPopup(auth, provider)
-  .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
-    };
     
+    
+    const handlePickAvatar = async () => {
+        UserPermissions.getCameraPermission();
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1
+        })
+        const userRef = ref(storage, result);
+        auth.user.userIcon = userRef;
+    }
     return (
         <View>
             <View style={styles.spacing}>
@@ -58,7 +52,7 @@ const SettingsScreen = ({navigation}) => {
                 <View style={styles.user}>
                     
                     <Image style={styles.userIcon} source={require('../assets/images/steamlogoblackonwhite.png')} />
-                    <Pressable style={styles.signinoutButton} onPress={handleSignIn}>
+                    <Pressable style={styles.signinoutButton} onPress={() => {}}>
                         <Text>Sign In/Out</Text>
                     </Pressable>
                 </View>
@@ -97,15 +91,20 @@ const SettingsScreen = ({navigation}) => {
                     />
                 </View>
                 <View style={styles.optionView}>
-                    <Pressable onPress={() => {navigation.navigate('Notification')}}>
+                    <Pressable onPress={() => {handlePickAvatar}}>
                         <Text style={styles.optionText}>Notification Settings</Text>
                     </Pressable>
+                </View>
+                <View style={styles.optionView}>
+                    <TouchableOpacity onPress={() => {navigation.navigate("HomePageSettings")}}>
+                        <Text style={styles.optionText}>Home Page Settings</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.optionView}>
                     <Pressable style={{width: '100%'}} onPress={() => {Linking.openURL('https://life.allencs.org')}}>
                         <View >
                             <Text style={styles.optionText}>Feedback</Text>
-                            <Image source={require('../assets/images/chevron-right-md.png')} />
+                            
                         </View>
                     </Pressable>
                 </View>
@@ -124,7 +123,7 @@ const styles = StyleSheet.create ({
     spacing: {
         width: '100%',
         height: 50,
-        backgroundColor: Colors.WHITE,
+        backgroundColor: '#d0e0ff',
     },  
     background: {
         height: '100%',
