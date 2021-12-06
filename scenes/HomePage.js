@@ -18,7 +18,9 @@ const HomePage = () => {
                 </View>
                 <View style={{paddingVertical: 15}} /> 
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                    <View style={styles.homepageBottomRectangle} />
+                    <View style={styles.homepageBottomRectangle} >
+                        <Text>Hello, World</Text>
+                    </View>
                 </View>
                 <View style={{marginVertical: 15}} />            
             </LinearGradient>

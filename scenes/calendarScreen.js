@@ -109,7 +109,7 @@ const CalendarScreen = () => {
                 
                 <View style={{height: 1, backgroundColor: Colors.GRAY, marginTop: 10, marginLeft: 15, marginRight: 15}} />
                 <View style={{alignItems: 'center'}}>
-                    <Text style={styles.upcomingEventsStyle}>Upcoming Events</Text>
+                    <Text style={styles.upcomingEventsStyle}>Events</Text>
                     <FlatList 
                     scrollEnabled={false}
                     style = {{flex: 5}}

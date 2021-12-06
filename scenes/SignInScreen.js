@@ -26,6 +26,7 @@ const LoginScreen = ({navigation}) => {
         .then((userCredential) => {
             //Signed in
             const user = userCredential.user;
+            
             alert(`Account created: ${email}. Please check email for verification and Log In`)
         })
         .catch((error) => {

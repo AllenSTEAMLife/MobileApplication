@@ -5,6 +5,7 @@ import {
     StyleSheet,
     
 } from 'react-native'
+
 import Colors from '../colors/Colors';
 const EventItem=(props) => {
     const start = new Date(props.date * 1000);
@@ -46,6 +47,9 @@ const styles = StyleSheet.create({
     },
     messageStyle: {
         fontSize: 14,
+    },
+    dateStyle: {
+        color: '#ff0000'
     }
     
 });
