@@ -43,7 +43,7 @@ const ServiceScreen = () => {
                 <SegmentedControl
                     tabs={["STEAM", "Other", "All"]}
                     textStyle={{fontSize: 15}}
-                    onChange={(index) => {handleTabChange(index)}}
+                    //onChange={(index) => {handleTabChange(index)}}
                     paddingVertical={6}
                     containerStyle={{
                         marginVertical: 20,
@@ -56,8 +56,9 @@ const ServiceScreen = () => {
                 <FlatList 
                     style = {{flex: 5}}
                     showsHorizontalScrollIndicator = {false}
-                    showsVerticalScrollIndicator={false}
+                    showsVerticalScrollIndicator = {false}
                     data = {services}
+                    keyExtractor = {(item, index) => index.toString()}
                     renderItem={({item}) => <ServiceListItem title={item.title} message={item.message} type={item.type}/>} 
                 />
             </View>

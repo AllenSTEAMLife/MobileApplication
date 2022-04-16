@@ -4,15 +4,15 @@ import { StyleSheet, Text, View, Pressable } from 'react-native'
 
 import SegmentedControl from 'rn-segmented-control'
 import Colors from '../assets/colors/Colors';
-import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomePageSettings = ({navigation}) => {
     const [topSelection, setTopSelection] = React.useState(0);
     const [bottomSelection, setBottomSelection] = React.useState(0);
     const save = async () => {
         try {
-            await AsyncStorageLib.setItem('HomePageTopOption', topSelection)
-            await AsyncStorageLib.setItem('HomepageBottom', bottomSelection)
+            await AsyncStorage.setItem('HomePageTopOption', topSelection)
+            await AsyncStorage.setItem('HomepageBottom', bottomSelection)
         } catch (e) {
             console.error(e)
         }

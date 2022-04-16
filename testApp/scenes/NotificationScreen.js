@@ -40,7 +40,7 @@ const NotificationScreen = () => {
                     <NotificationHeader/>
                     <SegmentedControl
                         tabs={["Service", "Events", "Campus", "All"]}
-                        onChange={() => {}}
+                        //onChange={() => {}}
                         paddingVertical={6}
                         containerStyle={{
                             marginVertical: 20,

@@ -69,7 +69,7 @@ const SettingsScreen = ({navigation}) => {
                     />
                 </View>
                 <View style={styles.optionView}>
-                    <Text style={styles.optionText}>Show Events?</Text>
+                    <Text style={styles.optionText}>Show Events</Text>
                     <Switch 
                     trackColor={{ false: "#767577", true: "#81b0ff" }}
                     thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
@@ -92,7 +92,7 @@ const SettingsScreen = ({navigation}) => {
                 </View>
                 <View style={styles.optionView}>
                     <Pressable onPress={() => {handlePickAvatar}}>
-                        <Text style={styles.optionText}>Notification Settings</Text>
+                        <Text style={styles.optionText}>Change Avatar</Text>
                     </Pressable>
                 </View>
                 <View style={styles.optionView}>
@@ -104,7 +104,6 @@ const SettingsScreen = ({navigation}) => {
                     <Pressable style={{width: '100%'}} onPress={() => {Linking.openURL('https://life.allencs.org')}}>
                         <View >
                             <Text style={styles.optionText}>Feedback</Text>
-                            
                         </View>
                     </Pressable>
                 </View>

@@ -12,8 +12,13 @@ import ServiceScreen from './scenes/ServiceScreen';
 import CalendarScreen from './scenes/calendarScreen';
 import SettingsScreen from './scenes/SettingsScreen';
 import LoginScreen from './scenes/SignInScreen';
-import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomePageSettings from './scenes/HomePageSettings';
+import {LogBox} from 'react-native';
+
+//ignore async storage warning
+LogBox.ignoreLogs(["AsyncStorage has been extracted from react-native core and will be removed in a future release. It can now be installed and imported from '@react-native-async-storage/async-storage' instead of 'react-native'. See https://github.com/react-native-async-storage/async-storage"]);
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const SettingsStack = () => {
@@ -45,6 +50,7 @@ export default function App() {
     'Montserrat-ExtraBold': require('./assets/fonts/Montserrat-ExtraBold.ttf'),
     'Montserrat-Medium': require('./assets/fonts/Montserrat-Medium.ttf'),
     'Montserrat-SemiBold': require('./assets/fonts/Montserrat-SemiBold.ttf'),
+    'Asap-Regular': require('./assets/fonts/Asap-Regular.ttf'),
   });
   
   if (!loaded) {

@@ -77,7 +77,7 @@ const CalendarScreen = () => {
     return(
         <View style={{backgroundColor: Colors.WHITE}}>
         <CalendarHeader/>
-        <ScrollView style={{minHeight: '100%'}}>
+        <View style={{minHeight: '100%'}}>
             <LinearGradient colors={['#ffffff','#ffffff','#ffffff','#a6c4ff', '#2585f6']} style={styles.gradientStyle}>
             <View style = {{flex: 1, minHeight: '100%'}}>
                 
@@ -123,7 +123,7 @@ const CalendarScreen = () => {
                 
             </View>
             </LinearGradient>
-        </ScrollView>
+        </View>
         </View>
     );
 
