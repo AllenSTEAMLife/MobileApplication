@@ -27,7 +27,7 @@ const ShowDay = (props) => {
             backgroundColor:color
         },
         dayText: {
-            color:"black",
+            color:"white",
             textAlign:"center",
             fontWeight:"bold",
             fontSize:40

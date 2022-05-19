@@ -18,36 +18,38 @@ const HomePage = () => {
             console.error(error);
         } finally { }
     }
-    //need to see why the update day box method is not working properly- probably something with json
+    
     const updateDayBox = (newData) => {
         const dataArr = newData.dayList;
         const today = new Date();
         const currentDay = today.getDate();
-        const currentMonth = (today.getMonth) + 1;
+        const currentMonth = (today.getMonth()) + 1;
         const currentYear = today.getFullYear() - (Math.floor(today.getFullYear() / 100))*100;
         for (var index = 0; index < dataArr.length; index++) {
             var tempDate2 = Object.keys(dataArr[index])[0];
             var tempDate = tempDate2.split("/");
-            console.log(`tempDate: ${tempDate2}`);
             //if the current date has been found
             if ((parseInt(tempDate[0]) == currentMonth) && (parseInt(tempDate[1]) == currentDay) && (parseInt(tempDate[2]) == currentYear)) {
                 setDay(dataArr[index][tempDate2]);
                 switch(day) {
-                    case "A":
-                        setDayColor("red");
-                    case "B":
-                        setDayColor("blue");
-                    default:
-                        setDayColor("red");
+                    case "A": //set to red on a days
+                        setDayColor("#E22739");
+                        break;
+                    case "B": //set to blue on b days
+                        setDayColor("#1982c4");
+                        break;
+                    default: //set to white if unsure
+                        setDayColor("white");
+                        break;
                 }
             }
         }
     }
     React.useEffect(() => {
         getEvents();
-        /*if (data) {
+        if (data) {
             updateDayBox(data);
-        }*/
+        }
       }, []);
 
     return (
