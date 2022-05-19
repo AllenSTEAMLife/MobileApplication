@@ -1,14 +1,61 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { LinearGradient } from 'expo-linear-gradient'
-import HomePageHeader from './headers/HomePageHeader'
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import HomePageHeader from './headers/HomePageHeader';
+import ShowDay from './ShowDay.js';
+
 const HomePage = () => {
+    const [data, setData] = React.useState([]);
+    const [day, setDay] = React.useState("none");
+    const [dayColor, setDayColor] = React.useState("white");
+
+    const getEvents = async () => {
+        try {
+            const response = await fetch('https://life.allencs.org/static/day.json');
+            const json = await response.json();
+            setData(json);
+        } catch (error) {
+            console.error(error);
+        } finally { }
+    }
+    //need to see why the update day box method is not working properly- probably something with json
+    const updateDayBox = (newData) => {
+        const dataArr = newData.dayList;
+        const today = new Date();
+        const currentDay = today.getDate();
+        const currentMonth = (today.getMonth) + 1;
+        const currentYear = today.getFullYear() - (Math.floor(today.getFullYear() / 100))*100;
+        for (var index = 0; index < dataArr.length; index++) {
+            var tempDate2 = Object.keys(dataArr[index])[0];
+            var tempDate = tempDate2.split("/");
+            console.log(`tempDate: ${tempDate2}`);
+            //if the current date has been found
+            if ((parseInt(tempDate[0]) == currentMonth) && (parseInt(tempDate[1]) == currentDay) && (parseInt(tempDate[2]) == currentYear)) {
+                setDay(dataArr[index][tempDate2]);
+                switch(day) {
+                    case "A":
+                        setDayColor("red");
+                    case "B":
+                        setDayColor("blue");
+                    default:
+                        setDayColor("red");
+                }
+            }
+        }
+    }
+    React.useEffect(() => {
+        getEvents();
+        /*if (data) {
+            updateDayBox(data);
+        }*/
+      }, []);
+
     return (
         <View style={{flex: 1,alignItems: 'center'}}>
             <LinearGradient  colors={['#ffffff','#ffffff','#ffffff','#a6c4ff', '#2585f6']} style={styles.linearGradient}>
                 <HomePageHeader />
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                    <View style={styles.homepageTopRectangle} />
+                    <ShowDay text={day} color={dayColor}/>
                 </View>
                 <View style={{paddingVertical: 15}} />
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
@@ -28,7 +75,12 @@ const HomePage = () => {
     )
 }
 
-export default HomePage
+/*
+<View style={styles.homepageTopRectangle}>
+    <Text>{day} Day</Text>
+</View>
+*/
+
 
 const styles = StyleSheet.create({
     homepageTopRectangle: {
@@ -103,3 +155,5 @@ const styles = StyleSheet.create({
         width: '100%'
     }
 })
+
+export default HomePage

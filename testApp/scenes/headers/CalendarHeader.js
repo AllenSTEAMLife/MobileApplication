@@ -8,9 +8,6 @@ import {
 } from 'react-native';
 
 
-
-
-
 const CalendarHeader = () => {
     return(
         <View style={{alignItems: 'center'}}>
