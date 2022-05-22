@@ -1,24 +1,35 @@
 import * as React from 'react';
-import PropTypes, { nominalTypeHack } from 'prop-types';
 import {
-    View,
+    FlatList,StyleSheet,Text,View,
 } from 'react-native';
+import event from '../assets/models/event';
+import EventItem from '../assets/models/eventItem.js';
 
 const ShowView = (props) => {
-    const { children, show, style } = props;
+    const { eventList, show, text } = props;
     if (!show) {
-        //return null;
         return (
-          <View style={{display:'none'}}>
-              { children }
-          </View>
-      );
+            <View style={{display:'none'}}></View>
+        );
     }
-    return (
-        <View>
-            { children }
-        </View>
-    );
+        return (
+                    <FlatList 
+                    scrollEnabled={true}
+                    style = {{flex: 5}}
+                    data = {eventList}
+                    renderItem={({item}) => <EventItem title={item.name} date = {item.startTime} message = {item.description}/>} 
+                    keyExtractor = {(key, index) => index.toString()}
+                    />
+      );
 };
+
+
+const styles = StyleSheet.create({
+    eventsStyle: {
+        fontFamily: 'Asap-Regular',
+        fontSize: 34,
+        color: '#393874'
+    }
+});
 
 export default ShowView;

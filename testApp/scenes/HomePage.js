@@ -18,31 +18,36 @@ const HomePage = () => {
             console.error(error);
         } finally { }
     }
-    
+
     const updateDayBox = (newData) => {
-        const dataArr = newData.dayList;
-        const today = new Date();
-        const currentDay = today.getDate();
-        const currentMonth = (today.getMonth()) + 1;
-        const currentYear = today.getFullYear() - (Math.floor(today.getFullYear() / 100))*100;
-        for (var index = 0; index < dataArr.length; index++) {
-            var tempDate2 = Object.keys(dataArr[index])[0];
-            var tempDate = tempDate2.split("/");
-            //if the current date has been found
-            if ((parseInt(tempDate[0]) == currentMonth) && (parseInt(tempDate[1]) == currentDay) && (parseInt(tempDate[2]) == currentYear)) {
-                setDay(dataArr[index][tempDate2]);
-                switch(day) {
-                    case "A": //set to red on a days
-                        setDayColor("#E22739");
-                        break;
-                    case "B": //set to blue on b days
-                        setDayColor("#1982c4");
-                        break;
-                    default: //set to white if unsure
-                        setDayColor("white");
-                        break;
+        try { //sometimes it is weird when there is not a try catch here
+            const dataArr = newData.dayList;
+            const today = new Date();
+            const currentDay = today.getDate();
+            const currentMonth = (today.getMonth()) + 1;
+            const currentYear = today.getFullYear() - (Math.floor(today.getFullYear() / 100)) * 100;
+            for (var index = 0; index < dataArr.length; index++) {
+                var tempDate2 = Object.keys(dataArr[index])[0];
+                var tempDate = tempDate2.split("/");
+                //if the current date has been found
+                if ((parseInt(tempDate[0]) == currentMonth) && (parseInt(tempDate[1]) == currentDay) && (parseInt(tempDate[2]) == currentYear)) {
+                    setDay(dataArr[index][tempDate2]);
+                    switch (day) {
+                        case "A": //set to red on a days
+                            setDayColor("#E22739");
+                            break;
+                        case "B": //set to blue on b days
+                            setDayColor("#1982c4");
+                            break;
+                        default: //set to white if unsure
+                            setDayColor("white");
+                            break;
+                    }
                 }
             }
+        }
+        catch (error) {
+            console.log(error);
         }
     }
     React.useEffect(() => {
@@ -50,28 +55,28 @@ const HomePage = () => {
         if (data) {
             updateDayBox(data);
         }
-      }, []);
+    }, []);
 
     return (
-        <View style={{flex: 1,alignItems: 'center'}}>
-            <LinearGradient  colors={['#ffffff','#ffffff','#ffffff','#a6c4ff', '#2585f6']} style={styles.linearGradient}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+            <LinearGradient colors={['#ffffff', '#ffffff', '#ffffff', '#a6c4ff', '#2585f6']} style={styles.linearGradient}>
                 <HomePageHeader />
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                    <ShowDay text={day} color={dayColor}/>
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                    <ShowDay text={day} color={dayColor} />
                 </View>
-                <View style={{paddingVertical: 15}} />
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{ paddingVertical: 15 }} />
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                     <View style={styles.homepageLeftSquare}></View>
-                    <View style={{flex: 2}}/>
+                    <View style={{ flex: 2 }} />
                     <View style={styles.homepageRightSquare}></View>
                 </View>
-                <View style={{paddingVertical: 15}} /> 
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{ paddingVertical: 15 }} />
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                     <View style={styles.homepageBottomRectangle} >
                         <Text>Hello, World</Text>
                     </View>
                 </View>
-                <View style={{marginVertical: 15}} />            
+                <View style={{ marginVertical: 15 }} />
             </LinearGradient>
         </View>
     )
@@ -153,7 +158,7 @@ const styles = StyleSheet.create({
         flex: 1,
         zIndex: 0,
         paddingBottom: 50,
-        
+
         width: '100%'
     }
 })
