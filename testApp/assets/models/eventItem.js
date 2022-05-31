@@ -4,7 +4,8 @@ import {
     View,
     Text,
     StyleSheet,
-    Modal
+    Modal,
+    Dimensions
 } from 'react-native'
 import Colors from '../colors/Colors';
 
@@ -18,21 +19,31 @@ const EventItem = (props) => {
     const Popup = (props) => {
         const { message, time, title, show } = props;
         return (
-            <Modal animationType="slide" transparent={true} visible={show} onRequestClose={()=> {togglePopup();}}>
+            <Modal animationType="fade" transparent={true} visible={show} onRequestClose={()=> {togglePopup();}}>
+                <View style={styles.popupContainer}>
                 <View style={styles.popupStyle}>
-                    <Text>{title}</Text>
-                    <Text>{time}</Text>
-                    <Text>{message}</Text>
+                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.popupTitle}>{title}</Text>
+                    <Text style={styles.popupTime}>{time}</Text>
+                    <View style={styles.messageContainer}>
+                        <Text numberOfLines={8} ellipsizeMode='tail' style={styles.popupMessage}>{message}</Text>
+                    </View>
                     <Pressable
-              style={styles.closeButton}
+              style={({pressed}) => [ {
+                backgroundColor: pressed
+                ? '#114b7a' : '#2196F3'
+              },
+              styles.closeButton]}
               onPress={() => {togglePopup();}}
             >
-              <Text>Close Event Details</Text>
+              <Text style={styles.popupCloseText}>Close Event Details</Text>
             </Pressable>
+                </View>
                 </View>
             </Modal>
         );
     }
+    const dayArray = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     const start = new Date(props.date * 1000);
     var hours = start.getHours();
@@ -42,7 +53,11 @@ const EventItem = (props) => {
     hours = hours ? hours : 12; // the hour '0' should be '12'
     minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
-    var timeString = `${start.toDateString()} @ ${strTime}`;
+    var dayText = dayArray[start.getDay()];
+    var monthText = monthArray[start.getMonth()];
+
+    var dateString = `${dayText}, ${monthText} ${start.getDate()}, ${start.getFullYear()}`;
+    var timeString = `${dateString} @ ${strTime}`;
 
     return (
         <View style={{alignItems:'center'}}>
@@ -55,7 +70,7 @@ const EventItem = (props) => {
                     <Text numberOfLines={2} ellipsizeMode='tail' style={styles.messageStyle}>{props.message}</Text>
                 </View>
             </View>
-        </Pressable>
+            </Pressable>
         </View>
     );
 }
@@ -77,8 +92,20 @@ const styles = StyleSheet.create({
     messageStyle: {
         fontSize: 14,
     },
+    messageContainer: {
+        padding: 26,
+        paddingTop: 0,
+        width: '100%',
+        flexDirection: 'row'
+    },
     dateStyle: {
         color: '#ff0000'
+    },
+    popupContainer: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        height: '100%'
     },
     popupStyle: {
         margin: 20,
@@ -93,13 +120,36 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+        elevation: 5,
+    },
+    popupTitle: {
+        margin: 20,
+        marginBottom: 10,
+        fontSize: 40,
+        fontWeight: 'bold'
+    },
+    popupTime: {
+        margin: 20, 
+        marginTop: 0,
+        marginBottom: 12,
+        fontSize: 18,
+        paddingBottom: 10,
+        borderBottomWidth: 3,
+        borderBottomColor: 'black'
+    },
+    popupMessage: {
+        fontSize: 17
+    },
+    popupCloseText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white'
     },
     closeButton: {
-        borderRadius: 20,
+        borderRadius: 16,
+        marginTop: 10,
         padding: 10,
-        elevation: 2,
-        backgroundColor: "#2196F3"
+        elevation: 2
       }
 });
 export default EventItem;

@@ -22,6 +22,7 @@ const CalendarScreen = () => {
     const [selectedDay, setSelectedDay] = React.useState();
     const [events, setEvents] = React.useState([]);
     const [allEvents, setAllEvents] = React.useState([]);
+    const [selectedDayText, setSelectedDayText] = React.useState("");
 
     const dataFromStorage = async () => {
         try {
@@ -73,6 +74,9 @@ const CalendarScreen = () => {
         }
         if (eventsArr.length > 0) { setShowEvents(true); setShowEventsList(true); }
         else { setShowEvents(false); setShowEventsList(false); }
+        
+        console.log(eventsArr);
+        console.log(showEvents);
         setEvents(eventsArr);
         setAllEvents(allEventsArr);
     }
@@ -103,7 +107,13 @@ const CalendarScreen = () => {
         const { eventList, show } = props;
         if (!show) {
             return (
-                <View style={{ display: 'none' }}></View>
+                <FlatList
+                scrollEnabled={true}
+                style={[{display: 'none'},styles.eventListing]}
+                data={eventList}
+                renderItem={({ item }) => <EventItem title={item.name} date={item.startTime} message={item.description} />}
+                keyExtractor={(key, index) => index.toString()}
+                />
             );
         }
         return (
@@ -120,7 +130,11 @@ const CalendarScreen = () => {
         const { show, text, toggle } = props;
         if (!show) {
             return (
-                <View style={{ display: 'none' }}></View>
+            <View style={{ alignItems: 'center', display: 'none' }}>
+                <Pressable style={styles.eventsButton} onPress={toggle}>
+                    <Text style={styles.eventsTitle}>{text}</Text>
+                </Pressable>
+            </View>
             );
         }
         return (
@@ -146,7 +160,7 @@ const CalendarScreen = () => {
                         <View style={{ marginHorizontal: 20 }}>
                             <Calendar
                                 // Handler which gets executed on day press. Default = undefined
-                                onDayPress={(day) => { setSelectedDay(day); updateEvents(data); }}
+                                onDayPress={(day) => { setSelectedDay(day);updateEvents(data);setSelectedDayText(`Events On ${day.month}/${day.day}`); }}
                                 // Handler which gets executed on day long press. Default = undefined
                                 onDayLongPress={(day) => { console.log('selected day', day) }}
                                 // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
@@ -166,7 +180,7 @@ const CalendarScreen = () => {
                             />
                         </View>
                         <View style={{ height: 1, backgroundColor: Colors.GRAY, marginTop: 10, marginLeft: 15, marginRight: 15 }} />
-                        <ShowText show={showEvents} text={"Events On This Day"} toggle={toggleEvents} />
+                        <ShowText show={showEvents} text={selectedDayText} toggle={toggleEvents} />
                         <ShowList eventList={events} show={showEventsList} />
                         <ShowText show={true} text={"Upcoming Events"} toggle={toggleUpcoming} />
                         <ShowList eventList={allEvents} show={showUpcoming} />
