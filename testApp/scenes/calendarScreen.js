@@ -14,6 +14,8 @@ import event from '../assets/models/event';
 import EventItem from '../assets/models/eventItem.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+var reloadCount = 0;
+
 const CalendarScreen = () => {
     const [data, setData] = React.useState([]);
     const [showEvents, setShowEvents] = React.useState(false);
@@ -40,6 +42,10 @@ const CalendarScreen = () => {
         } catch (error) {
             console.error(error);
         }
+        //initialize the day to be today's date on first run
+        //come back here next
+        setSelectedDay
+        setSelectedDayText(`Events On ${day.month}/${day.day}`);
     }
     const getEvents = async () => {
         try {
@@ -58,27 +64,30 @@ const CalendarScreen = () => {
     const updateEvents = (dataArr) => {
         var eventsArr = [];
         var allEventsArr = [];
-        console.log(`here, dataArr: ${dataArr}`);
-        if (dataArr.length > 0) {
-            dataArr.forEach(event => {
-                let time = new Date(event.startTime * 1000);
-                let day = time.getUTCDate();
-                //note that this starts from 0 but selectedDay.month starts from 1
-                let month = time.getUTCMonth();
-                allEventsArr.push(event);
-                if ((selectedDay != undefined) && (day == selectedDay.day)) {
-                    eventsArr.push(event);
-                    AsyncStorage.setItem('eventState', `${true}`);
-                }
-            });
+        try {
+            if (dataArr.length > 0) {
+                dataArr.forEach(event => {
+                    let time = new Date(event.startTime * 1000);
+                    let day = time.getUTCDate();
+                    //note that this starts from 0 but selectedDay.month starts from 1
+                    let month = time.getUTCMonth();
+                    allEventsArr.push(event);
+                    if ((selectedDay != undefined) && (day == selectedDay.day)) {
+                        eventsArr.push(event);
+                        AsyncStorage.setItem('eventState', `${true}`);
+                    }
+                });
+            }
+            if (eventsArr.length > 0) { setShowEvents(true);
+                setShowEventsList(true); }
+            else { setShowEvents(false);
+                setShowEventsList(false); }
+            setEvents(eventsArr);
+            setAllEvents(allEventsArr);
         }
-        if (eventsArr.length > 0) { setShowEvents(true); setShowEventsList(true); }
-        else { setShowEvents(false); setShowEventsList(false); }
-        
-        console.log(eventsArr);
-        console.log(showEvents);
-        setEvents(eventsArr);
-        setAllEvents(allEventsArr);
+        catch (error) {
+            console.log("Error found: " + error);
+        }
     }
     const toggleUpcoming = () => {
         const currentUpcoming = showUpcoming;
@@ -95,13 +104,16 @@ const CalendarScreen = () => {
     }
 
     React.useEffect(() => {
-        dataFromStorage();
+        //only run once
+        if (reloadCount == 0) {
+            dataFromStorage();
+            reloadCount++;
+        }
         getEvents();
         if (data.length > 0) {
             updateEvents(data);
-            toggleEvents();
         }
-    }, []);
+    }, [selectedDay]);
 
     const ShowList = (props) => {
         const { eventList, show } = props;
