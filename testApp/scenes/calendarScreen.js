@@ -43,9 +43,10 @@ const CalendarScreen = () => {
             console.error(error);
         }
         //initialize the day to be today's date on first run
-        //come back here next
-        setSelectedDay
-        setSelectedDayText(`Events On ${day.month}/${day.day}`);
+        const today = new Date();
+        var dayObject = { day:today.getDate(), month:(today.getMonth()+1), year:today.getFullYear() }
+        setSelectedDay(dayObject);
+        setSelectedDayText(`Events On ${dayObject.month}/${dayObject.day}`);
     }
     const getEvents = async () => {
         try {
@@ -71,8 +72,9 @@ const CalendarScreen = () => {
                     let day = time.getUTCDate();
                     //note that this starts from 0 but selectedDay.month starts from 1
                     let month = time.getUTCMonth();
+                    let year = time.getUTCFullYear();
                     allEventsArr.push(event);
-                    if ((selectedDay != undefined) && (day == selectedDay.day)) {
+                    if ((selectedDay != undefined) && (day == selectedDay.day) && (month == selectedDay.month) && (year == selectedDay.year)) {
                         eventsArr.push(event);
                         AsyncStorage.setItem('eventState', `${true}`);
                     }
