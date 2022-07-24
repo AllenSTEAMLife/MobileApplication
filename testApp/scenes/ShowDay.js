@@ -4,8 +4,11 @@ import {
 } from 'react-native';
 
 const ShowDay = (props) => {
-    const { text, color } = props;
-
+    const { text, color, textColor } = props;
+    var newTextColor = textColor;
+    if (textColor == "") {
+        newTextColor = "black";
+    }
     const styles = StyleSheet.create({
         dayBox: {
             marginLeft: 30,
@@ -27,7 +30,7 @@ const ShowDay = (props) => {
             backgroundColor:color
         },
         dayText: {
-            color:"white",
+            color:newTextColor,
             textAlign:"center",
             fontWeight:"bold",
             fontSize:40
@@ -40,5 +43,9 @@ const ShowDay = (props) => {
         </View>
     );
 };
+ShowDay.defaultProps = {
+    color:"white",
+    textColor:"black"
+}
 
 export default ShowDay;

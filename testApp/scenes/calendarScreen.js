@@ -14,8 +14,6 @@ import event from '../assets/models/event';
 import EventItem from '../assets/models/eventItem.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-var reloadCount = 0;
-
 const CalendarScreen = () => {
     const [data, setData] = React.useState([]);
     const [showEvents, setShowEvents] = React.useState(false);
@@ -25,6 +23,7 @@ const CalendarScreen = () => {
     const [events, setEvents] = React.useState([]);
     const [allEvents, setAllEvents] = React.useState([]);
     const [selectedDayText, setSelectedDayText] = React.useState("");
+    const [reloadCount, setReloadCount] = React.useState(0);
 
     const dataFromStorage = async () => {
         try {
@@ -50,9 +49,10 @@ const CalendarScreen = () => {
     }
     const getEvents = async () => {
         try {
-            const response = await fetch('https://life.allencs.org/events/json');
+            const response = await fetch('https://roboticsdev1584.github.io/RetroCycle/Assets/events.json');
             const json = await response.json();
-            setData(json);
+            const eventItems = json["Items"];
+            setData(eventItems);
             try {
                 await AsyncStorage.setItem('calendarEvents', `${response}`);
             } catch (e) {
@@ -65,19 +65,47 @@ const CalendarScreen = () => {
     const updateEvents = (dataArr) => {
         var eventsArr = [];
         var allEventsArr = [];
+        console.log(dataArr);
+        const today = new Date();
         try {
-            if (dataArr.length > 0) {
+            if (dataArr && dataArr.length > 0) {
                 dataArr.forEach(event => {
-                    let time = new Date(event.startTime * 1000);
-                    let day = time.getUTCDate();
-                    //note that this starts from 0 but selectedDay.month starts from 1
-                    let month = time.getUTCMonth();
-                    let year = time.getUTCFullYear();
-                    allEventsArr.push(event);
-                    if ((selectedDay != undefined) && (day == selectedDay.day) && (month == selectedDay.month) && (year == selectedDay.year)) {
-                        eventsArr.push(event);
-                        AsyncStorage.setItem('eventState', `${true}`);
+                    let dayArr = event["Start-Date"].split("/");
+                    let day = dayArr[1];
+                    let month = dayArr[0];
+                    let year = dayArr[2];
+                    var startDate = new Date(parseInt(year), parseInt(month), parseInt(day), 0, 0, 0, 0);
+                    var endDateFound = false;
+                    var endDate = new Date();
+                    try {
+                        let endDateArr = event["End-Date"].split("/");
+                        endDate = new Date(parseInt(endDateArr[2]), parseInt(endDateArr[0]), parseInt(endDateArr[1], 23, 59, 59, 0));
+                        endDateFound = true;
+                    } catch(error) { console.log("had error: "+error); }
+                    if (!endDateFound) {
+                        if (startDate >= today) {
+                            allEventsArr.push(event);
+                        }
+                        if (selectedDay != undefined) {
+                            const selectedDayObj = new Date(selectedDay.year, selectedDay.month, selectedDay.day, 0, 0, 0, 0);
+                            if (selectedDayObj == startDate) {
+                                eventsArr.push(event);
+                                AsyncStorage.setItem('eventState', `${true}`);
+                            }
+                        }
+                    } else {
+                        if (endDate >= today) {
+                            allEventsArr.push(event);
+                        }
+                        if (selectedDay != undefined) {
+                            const selectedDayObj = new Date(selectedDay.year, selectedDay.month, selectedDay.day, 0, 0, 0, 0);
+                            if (selectedDayObj >= startDate && selectedDayObj <= endDate) {
+                                eventsArr.push(event);
+                                AsyncStorage.setItem('eventState', `${true}`);
+                            }
+                        }
                     }
+                    
                 });
             }
             if (eventsArr.length > 0) { setShowEvents(true);
@@ -109,7 +137,7 @@ const CalendarScreen = () => {
         //only run once
         if (reloadCount == 0) {
             dataFromStorage();
-            reloadCount++;
+            setReloadCount(1);
         }
         getEvents();
         if (data.length > 0) {
@@ -125,7 +153,7 @@ const CalendarScreen = () => {
                 scrollEnabled={true}
                 style={[{display: 'none'},styles.eventListing]}
                 data={eventList}
-                renderItem={({ item }) => <EventItem title={item.name} date={item.startTime} message={item.description} />}
+                renderItem={({ item }) => <EventItem title={item["Event-Name"]} date={`${item["Start-Date"]},${item["Start-Time"]},${item["End-Date"]},${item["End-Time"]}`} message={item["Description"]} />}
                 keyExtractor={(key, index) => index.toString()}
                 />
             );
@@ -135,7 +163,7 @@ const CalendarScreen = () => {
                 scrollEnabled={true}
                 style={styles.eventListing}
                 data={eventList}
-                renderItem={({ item }) => <EventItem title={item.name} date={item.startTime} message={item.description} />}
+                renderItem={({ item }) => <EventItem title={item["Event-Name"]} date={`${item["Start-Date"]},${item["Start-Time"]},${item["End-Date"]},${item["End-Time"]}`} message={item["Description"]} />}
                 keyExtractor={(key, index) => index.toString()}
             />
         );

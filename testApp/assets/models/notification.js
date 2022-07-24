@@ -1,7 +1,8 @@
 export default class notification {
-    constructor(type, title, message) {
-    this.type = type;
-    this.title = title;
-    this.message = message;
+    constructor(title, type, date, message) {
+        this.title = title
+        this.date = date
+        this.type = type
+        this.message = message
     }
 }

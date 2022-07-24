@@ -45,20 +45,51 @@ const EventItem = (props) => {
     const dayArray = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    const start = new Date(props.date * 1000);
-    var hours = start.getHours();
-    var minutes = start.getMinutes();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    var dayText = dayArray[start.getDay()];
-    var monthText = monthArray[start.getMonth()];
-
-    var dateString = `${dayText}, ${monthText} ${start.getDate()}, ${start.getFullYear()}`;
-    var timeString = `${dateString} @ ${strTime}`;
-
+    const dateArr = (props.date).split(",");
+    var combStartStr = "";
+    try {
+    const startTime = dateArr[1].split(":");
+    var startHours = parseInt(startTime[0]);
+    const startMinutes = parseInt(startTime[1]);
+    var extraZero = "";
+    var ampm = "am";
+    if (startHours >= 12) {
+        startHours -= 12;
+        ampm = "pm";
+    }
+    if (startMinutes < 10) {
+        extraZero = "0";
+    }
+    combStartStr = startHours + ':' + extraZero + startMinutes + ' ' + ampm;
+    } catch(error) {}
+    var combEndStr = "";
+    try {    
+    const endTime = dateArr[3].split(":");
+    var endHours = parseInt(endTime[0]);
+    const endMinutes = parseInt(endTime[1]);
+    var extraZero = "";
+    var ampm = "am";
+    if (endHours >= 12) {
+        endHours -= 12;
+        ampm = "pm";
+    }
+    if (endMinutes < 10) {
+        extraZero = "0";
+    }
+    combEndStr = endHours + ':' + extraZero + endMinutes + ' ' + ampm;
+    } catch (error) {}
+    const startDate = dateArr[0];
+    var endDate = "";
+    try {
+        endDate = dateArr[2];
+    } catch (error) {}
+    var timeString = `${startDate} @ ${combStartStr} - ${endDate} @ ${combEndStr}`;
+    if (endDate == "" && combStartStr != combEndStr) {
+        timeString = `${startDate} from ${combStartStr} - ${combEndStr}`;
+    } else if (endDate == "" && (combStartStr == combEndStr || combEndStr == "")) {
+        timeString = `${startDate} @ ${combStartStr}`;
+    }
+    
     return (
         <View style={{alignItems:'center'}}>
         <Popup title={props.title} time={timeString} message={props.message} show={showPopup}/>
@@ -132,7 +163,7 @@ const styles = StyleSheet.create({
         margin: 20, 
         marginTop: 0,
         marginBottom: 12,
-        fontSize: 18,
+        fontSize: 16,
         paddingBottom: 10,
         borderBottomWidth: 3,
         borderBottomColor: 'black'

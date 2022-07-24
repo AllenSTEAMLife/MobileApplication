@@ -5,7 +5,7 @@ import Colors from '../../assets/colors/Colors';
 const HomePageHeader = () => {
     return (
         <View style={{flex: 1, alignItems: 'center' }}>
-            <View style={{aligneItems: 'center', flexDirection: 'row'}}>
+            <View style={{alignItems: 'center', flexDirection: 'row'}}>
                 
                 <Text style={styles.titleText}>
                     <Text style={{color: Colors.GREEN}}>

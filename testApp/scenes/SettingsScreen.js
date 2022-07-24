@@ -53,6 +53,9 @@ const SettingsScreen = ({ navigation }) => {
                         <Text>Sign In/Out</Text>
                     </Pressable>
                 </View>
+                <View style={styles.settingCategoryC}>
+                    <Text style={styles.settingCategory}>Content</Text>
+                </View>
                 <View style={styles.optionView}>
                     <Text style={[styles.optionText, styles.serviceText]}>Show Assigned Service Hours</Text>
                     <Switch
@@ -84,7 +87,7 @@ const SettingsScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.optionView}>
-                    <Pressable style={{ width: '100%' }} onPress={() => { Linking.openURL('https://life.allencs.org') }}>
+                    <Pressable style={{ width: '100%' }} onPress={() => { Linking.openURL('https://forms.gle/JrvYqouQmeJisK916') }}>
                         <View >
                             <Text style={styles.optionText}>Feedback</Text>
                         </View>
@@ -151,6 +154,15 @@ const styles = StyleSheet.create({
     },
     optionText: {
         fontSize: 20,
+        fontFamily: 'Montserrat-SemiBold',
+    },
+    settingCategoryC: {
+        width: '96%',
+        marginTop: 10,
+        padding: 6
+    },
+    settingCategory: {
+        fontSize: 30,
         fontFamily: 'Montserrat-SemiBold',
     },
 });

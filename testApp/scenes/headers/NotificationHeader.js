@@ -1,21 +1,22 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import * as React from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+} from 'react-native';
 
 const NotificationHeader = () => {
     return (
-        <View style={{alignItems: 'center' }}>
-            <View style={{aligneItems: 'center', flexDirection: 'row'}}>
-                
+        <View style={{ alignItems: 'center' }}>
+            <View style={{ alignItems: 'center', flexDirection: 'row' }}>
                 <Text style={styles.titleText}>
                     <Text style={styles.titleText}>
-                    {'NOTFICATIONS'}
+                        NOTFICATIONS
                     </Text>
                 </Text>
-                
             </View>
-            
         </View>
-    )
+    );
 }
 
 export default NotificationHeader
@@ -23,8 +24,7 @@ export default NotificationHeader
 const styles = StyleSheet.create({
     titleText: {
         marginTop: 50,
-        fontSize: 30,
+        fontSize: 35,
         fontFamily: "Montserrat-SemiBold"
-        
     }
-})
+});
