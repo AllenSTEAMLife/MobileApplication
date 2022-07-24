@@ -90,6 +90,11 @@ const EventItem = (props) => {
         timeString = `${startDate} @ ${combStartStr}`;
     }
     
+    console.log("title: "+props.title);
+    console.log("timeString: "+timeString);
+    console.log("message: "+props.message);
+    console.log("showPopup: "+showPopup);
+
     return (
         <View style={{alignItems:'center'}}>
         <Popup title={props.title} time={timeString} message={props.message} show={showPopup}/>

@@ -41,59 +41,114 @@ const ServiceScreen = () => {
 
     const updateServices = (dataArr) => {
         var services = [];
+        var today = new Date();
+        var yesterday = new Date(today.setDate(today.getDate() - 1));
+        today.setDate(today.getDate() + 1);
         try {
             if (dataArr.length > 0) {
                 dataArr.forEach(service => {
-                    var thisType = service["Type"].toUpperCase();
-                    if (thisType == "") {
-                        thisType = "O";
-                    }
-                    var dateString = "";
+                    let dayArr = service["Start-Date"].split("/");
+                    let day = dayArr[1];
+                    let month = dayArr[0];
+                    let year = dayArr[2];
+                    var startDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 0, 0, 0, 0);
+                    var endDateFound = false;
+                    var endDate = new Date();
                     try {
-                        dateString += service["Start-Date"];
-                    } catch (error) { dateString += " "; }
-                    try {
-                        dateString += ",";
-                        dateString += service["Start-Time"];
-                    } catch (error) { dateString += " "; }
-                    try {
-                        dateString += ",";
-                        dateString += service["End-Date"];
-                    } catch (error) { dateString += " "; }
-                    try {
-                        dateString += ",";
-                        dateString += service["End-Time"];
-                    } catch (error) { dateString += " "; }
-                    var newServiceItem = new ServiceItem(thisType, service["Service-Name"], service["Hours"], dateString, service["Description"]);
-                    thisType = service["Type"].toLowerCase();
-                    if (tabIndex == 0) {
-                        if (steamType(thisType)) {
-                            services.push(newServiceItem)
+                        let endDateArr = service["End-Date"].split("/");
+                        endDate = new Date(parseInt(endDateArr[2]), parseInt(endDateArr[0]) - 1, parseInt(endDateArr[1], 23, 59, 59, 0));
+                        endDateFound = true;
+                    } catch (error) { console.log("had error: " + error); }
+                    if (!endDateFound) {
+                        if (startDate > yesterday) {
+                            var thisType = service["Type"].toUpperCase();
+                            if (thisType == "") {
+                                thisType = "O";
+                            }
+                            var dateString = "";
+                            try {
+                                dateString += service["Start-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["Start-Time"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["End-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["End-Time"];
+                            } catch (error) { dateString += " "; }
+                            var newServiceItem = new ServiceItem(thisType, service["Service-Name"], service["Hours"], dateString, service["Description"]);
+                            thisType = service["Type"].toLowerCase();
+                            if (tabIndex == 0) {
+                                if (steamType(thisType)) {
+                                    services.push(newServiceItem)
+                                }
+                            } else if (tabIndex == 1) {
+                                if (!steamType(thisType)) {
+                                    services.push(newServiceItem)
+                                }
+                            } else if (tabIndex == 2) {
+                                services.push(newServiceItem)
+                            }
                         }
-                    } else if (tabIndex == 1) {
-                        if (!steamType(thisType)) {
-                            services.push(newServiceItem)
+                    } else {
+                        if (endDate > yesterday) {
+                            var thisType = service["Type"].toUpperCase();
+                            if (thisType == "") {
+                                thisType = "O";
+                            }
+                            var dateString = "";
+                            try {
+                                dateString += service["Start-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["Start-Time"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["End-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["End-Time"];
+                            } catch (error) { dateString += " "; }
+                            var newServiceItem = new ServiceItem(thisType, service["Service-Name"], service["Hours"], dateString, service["Description"]);
+                            thisType = service["Type"].toLowerCase();
+                            if (tabIndex == 0) {
+                                if (steamType(thisType)) {
+                                    services.push(newServiceItem)
+                                }
+                            } else if (tabIndex == 1) {
+                                if (!steamType(thisType)) {
+                                    services.push(newServiceItem)
+                                }
+                            } else if (tabIndex == 2) {
+                                services.push(newServiceItem)
+                            }
                         }
-                    } else if (tabIndex == 2) {
-                        services.push(newServiceItem)
                     }
                 });
             }
-        } catch (error) { console.log("new error: "+error); }
+        } catch (error) { console.log("new error: " + error); }
         setServiceItems(services);
     }
 
     React.useEffect(() => {
         getServices();
     }, [tabIndex]);
-    
-    return(
-        <LinearGradient colors={['#ffffff','#ffffff','#ffffff','#a6c4ff', '#2585f6']} style={styles.gradientStyle}>
-            <View style={{ flex: 1, alignItems: 'center'}}>
-                <Header />  
+
+    return (
+        <LinearGradient colors={['#ffffff', '#ffffff', '#ffffff', '#a6c4ff', '#2585f6']} style={styles.gradientStyle}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+                <Header />
                 <SegmentedControl
                     tabs={["STEAM", "Other", "All"]}
-                    textStyle={{fontSize: 15}}
+                    textStyle={{ fontSize: 15 }}
                     //onChange={(index) => {handleTabChange(index)}}
                     paddingVertical={6}
                     containerStyle={{
@@ -102,13 +157,13 @@ const ServiceScreen = () => {
                     currentIndex={tabIndex}
                     onChange={handleTabChange}
                 />
-                <FlatList 
-                    style = {{flex: 5}}
-                    showsHorizontalScrollIndicator = {false}
-                    showsVerticalScrollIndicator = {false}
-                    data = {serviceItems}
-                    keyExtractor = {(item, index) => index.toString()}
-                    renderItem={({item}) => <ServiceListItem title={item.title} date={item.date} hours={item.hours} message={item.message} type={item.type}/>} 
+                <FlatList
+                    style={{ flex: 5 }}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    data={serviceItems}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => <ServiceListItem title={item.title} date={item.date} hours={item.hours} message={item.message} type={item.type} />}
                 />
             </View>
         </LinearGradient>
@@ -122,7 +177,7 @@ const styles = StyleSheet.create({
         flex: 1,
         zIndex: 0,
         paddingBottom: 50,
-        
+
         width: '100%'
     }
 })

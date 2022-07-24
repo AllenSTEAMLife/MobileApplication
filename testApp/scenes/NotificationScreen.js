@@ -23,67 +23,163 @@ const NotificationScreen = () => {
 
     const updateEvents = (dataArr) => {
         var events = [];
+        var today = new Date();
+        var yesterday = new Date(today.setDate(today.getDate() - 1));
+        today.setDate(today.getDate() + 1);
         try {
             if (dataArr.length > 0) {
                 dataArr.forEach(event => {
-                    var dateString = "";
+                    let dayArr = event["Start-Date"].split("/");
+                    let day = dayArr[1];
+                    let month = dayArr[0];
+                    let year = dayArr[2];
+                    var startDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 0, 0, 0, 0);
+                    var endDateFound = false;
+                    var endDate = new Date();
                     try {
-                        dateString += event["Start-Date"];
-                    } catch (error) { dateString += " "; }
-                    try {
-                        dateString += ",";
-                        dateString += event["Start-Time"];
-                    } catch (error) { dateString += " "; }
-                    try {
-                        dateString += ",";
-                        dateString += event["End-Date"];
-                    } catch (error) { dateString += " "; }
-                    try {
-                        dateString += ",";
-                        dateString += event["End-Time"];
-                    } catch (error) { dateString += " "; }
-                    var newEventItem = new notification(event["Event-Name"], "O", dateString, event["Description"]);
-                    if (tabIndex == 1 || tabIndex == 3) {
-                        events.push(newEventItem);
+                        let endDateArr = event["End-Date"].split("/");
+                        endDate = new Date(parseInt(endDateArr[2]), parseInt(endDateArr[0])-1, parseInt(endDateArr[1], 23, 59, 59, 0));
+                        endDateFound = true;
+                    } catch (error) { console.log("had error: " + error); }
+                    if (!endDateFound) {
+                        if (startDate <= today && startDate > yesterday) {
+                            var dateString = "";
+                            try {
+                                dateString += event["Start-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += event["Start-Time"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += event["End-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += event["End-Time"];
+                            } catch (error) { dateString += " "; }
+                            var newEventItem = new notification(event["Event-Name"], "O", dateString, event["Description"]);
+                            if (tabIndex == 1 || tabIndex == 3) {
+                                events.push(newEventItem);
+                            }
+                        }
+                    }
+                    else {
+                        if ((startDate <= today && startDate > yesterday) && (endDate >= today)) {
+                            var dateString = "";
+                            try {
+                                dateString += event["Start-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += event["Start-Time"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += event["End-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += event["End-Time"];
+                            } catch (error) { dateString += " "; }
+                            var newEventItem = new notification(event["Event-Name"], "O", dateString, event["Description"]);
+                            if (tabIndex == 1 || tabIndex == 3) {
+                                events.push(newEventItem);
+                            }
+                        }
                     }
                 });
-                setNotificationItems(prevNotifs => ([...prevNotifs,...events]));
+                setNotificationItems(prevNotifs => ([...prevNotifs, ...events]));
             }
-        } catch (error) { console.log("new error: "+error); }
+        } catch (error) { console.log("new error: " + error); }
     }
     const updateServices = (dataArr) => {
         var services = [];
+        var today = new Date();
+        var yesterday = new Date(today.setDate(today.getDate() - 1));
+        today.setDate(today.getDate() + 1);
         try {
             if (dataArr.length > 0) {
                 dataArr.forEach(service => {
-                    var dateString = "";
+                    let dayArr = service["Start-Date"].split("/");
+                    let day = dayArr[1];
+                    let month = dayArr[0];
+                    let year = dayArr[2];
+                    var startDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 0, 0, 0, 0);
+                    var endDateFound = false;
+                    var endDate = new Date();
                     try {
-                        dateString += service["Start-Date"];
-                    } catch (error) { dateString += " "; }
-                    try {
-                        dateString += ",";
-                        dateString += service["Start-Time"];
-                    } catch (error) { dateString += " "; }
-                    try {
-                        dateString += ",";
-                        dateString += service["End-Date"];
-                    } catch (error) { dateString += " "; }
-                    try {
-                        dateString += ",";
-                        dateString += service["End-Time"];
-                    } catch (error) { dateString += " "; }
-                    var thisType = service["Type"].toUpperCase();
-                    if (thisType == "") {
-                        thisType = "O";
+                        let endDateArr = service["End-Date"].split("/");
+                        endDate = new Date(parseInt(endDateArr[2]), parseInt(endDateArr[0])-1, parseInt(endDateArr[1], 23, 59, 59, 0));
+                        endDateFound = true;
+                    } catch (error) { console.log("had error: " + error); }
+                    if (!endDateFound) {
+                        if (startDate <= today && startDate > yesterday) {
+                            var dateString = "";
+                            try {
+                                dateString += service["Start-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["Start-Time"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["End-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["End-Time"];
+                            } catch (error) { dateString += " "; }
+                            var thisType = service["Type"].toUpperCase();
+                            if (thisType == "") {
+                                thisType = "O";
+                            }
+                            console.log("here: "+service);
+                            var newServiceItem = new notification(service["Service-Name"], thisType, dateString, service["Description"]);
+                            if (tabIndex == 0 || tabIndex == 3) {
+                                services.push(newServiceItem);
+                            }
+                        }
                     }
-                    var newServiceItem = new notification(service["Service-Name"], thisType, dateString, service["Description"]);
-                    if (tabIndex == 0 || tabIndex == 3) {
-                        services.push(newServiceItem)
+                    else {
+                        console.log("found end");
+                        console.log("today: "+today);
+                        console.log("startDate: "+startDate);
+                        console.log("endDate: "+endDate);
+                        if ((startDate <= today && startDate > yesterday) && (endDate >= today)) {
+                            var dateString = "";
+                            try {
+                                dateString += service["Start-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["Start-Time"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["End-Date"];
+                            } catch (error) { dateString += " "; }
+                            try {
+                                dateString += ",";
+                                dateString += service["End-Time"];
+                            } catch (error) { dateString += " "; }
+                            var thisType = service["Type"].toUpperCase();
+                            if (thisType == "") {
+                                thisType = "O";
+                            }
+                            console.log("here2: "+service);
+                            var newServiceItem = new notification(service["Service-Name"], thisType, dateString, service["Description"]);
+                            if (tabIndex == 0 || tabIndex == 3) {
+                                services.push(newServiceItem)
+                            }
+                        }
                     }
                 });
-                setNotificationItems(prevNotifs => ([...prevNotifs,...services]));
+                setNotificationItems(prevNotifs => ([...prevNotifs, ...services]));
             }
-        } catch (error) { console.log("new error: "+error); }
+        } catch (error) { console.log("new error: " + error); }
     }
 
     const getEvents = async () => {
@@ -120,29 +216,29 @@ const NotificationScreen = () => {
         getEvents();
         getServices();
     }, [tabIndex]);
-    
+
     return (
-        <LinearGradient colors={['#ffffff','#ffffff','#ffffff','#a6c4ff', '#2585f6']} style={styles.gradientStyle}>
-                <View style={{ flex: 1, alignItems: 'center'}}>
-                    <NotificationHeader/>
-                    <SegmentedControl
-                        tabs={["Service", "Events", "Campus", "All"]}
-                        //onChange={() => {}}
-                        paddingVertical={6}
-                        containerStyle={{
-                            marginVertical: 20,
-                        }}
-                        currentIndex={tabIndex}
-                        onChange={handleTabChange}
-                        textStyle={{fontSize: 15}}
-                    />
-                    <FlatList 
-                    style = {{flex: 5}}
-                    data = {notificationItems}
-                    renderItem={({item}) => <NotifcationItem title={item.title} date={item.date} message={item.message} type={item.type}/>} 
-                    keyExtractor = {(item, index) => index.toString()}
-                    />
-                </View>
+        <LinearGradient colors={['#ffffff', '#ffffff', '#ffffff', '#a6c4ff', '#2585f6']} style={styles.gradientStyle}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+                <NotificationHeader />
+                <SegmentedControl
+                    tabs={["Service", "Events", "Campus", "All"]}
+                    //onChange={() => {}}
+                    paddingVertical={6}
+                    containerStyle={{
+                        marginVertical: 20,
+                    }}
+                    currentIndex={tabIndex}
+                    onChange={handleTabChange}
+                    textStyle={{ fontSize: 15 }}
+                />
+                <FlatList
+                    style={{ flex: 5 }}
+                    data={notificationItems}
+                    renderItem={({ item }) => <NotifcationItem title={item.title} date={item.date} message={item.message} type={item.type} />}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+            </View>
         </LinearGradient>
     );
 }
