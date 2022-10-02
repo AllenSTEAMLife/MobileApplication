@@ -89,11 +89,6 @@ const EventItem = (props) => {
     } else if (endDate == "" && (combStartStr == combEndStr || combEndStr == "")) {
         timeString = `${startDate} @ ${combStartStr}`;
     }
-    
-    console.log("title: "+props.title);
-    console.log("timeString: "+timeString);
-    console.log("message: "+props.message);
-    console.log("showPopup: "+showPopup);
 
     return (
         <View style={{alignItems:'center'}}>
@@ -114,7 +109,7 @@ const EventItem = (props) => {
 const styles = StyleSheet.create({
     viewStyle: {
         width: '95%',
-        height: 111,
+        height: 144,
         backgroundColor: Colors.WHITE,
         borderRadius: 10,
         padding: 10,

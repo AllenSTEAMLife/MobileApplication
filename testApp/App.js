@@ -13,8 +13,13 @@ import CalendarScreen from './scenes/calendarScreen';
 import SettingsScreen from './scenes/SettingsScreen';
 import LoginScreen from './scenes/SignInScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import HomePageSettings from './scenes/HomePageSettings';
+//import HomePageSettings from './scenes/HomePageSettings';
 import {LogBox} from 'react-native';
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
+
+/*import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from './config';
+initializeApp(firebaseConfig);*/
 
 //ignore async storage warning
 LogBox.ignoreLogs(["AsyncStorage has been extracted from react-native core and will be removed in a future release. It can now be installed and imported from '@react-native-async-storage/async-storage' instead of 'react-native'. See https://github.com/react-native-async-storage/async-storage"]);
@@ -24,16 +29,21 @@ const Stack = createNativeStackNavigator();
 const SettingsStack = () => {
   return(
   <Stack.Navigator initialRouteName='Settings' screenOptions={{headerShown: false}}>
-    <Stack.Screen name='TabNav' component={TabNav}/>
+    {/*<Stack.Screen name='TabNav' component={TabNav}/>*/}
     <Stack.Screen name='Settings' component={SettingsScreen}/>
     <Stack.Screen name='LogIn' component={LoginScreen}/>
           <Stack.Screen name='Notification' component={NotificationScreen}/>
-          <Stack.Screen name='HomePageSettings' component={HomePageSettings}/>
           {/* <Stack.Screen name='Feedback' component={feedbackScreen}/> */}
         </Stack.Navigator>
         );
 }
-const TabNav = () => {
+
+/*
+  This line was directly under and had same tab indentation as 'name='Notification'':
+  <Stack.Screen name='HomePageSettings' component={HomePageSettings}/>
+*/
+
+/*const TabNav = () => {
   return (
   <Tab.Navigator screenOptions={{headerShown: false}} >
       <Tab.Screen name="Home" component={HomePage} options={{tabBarLabel:"", tabBarIcon: (focused, tintColor) => (<Image style={{ width:35, height: 35, marginTop: 10 }} source={require('./assets/images/steamlogoblackonwhite.png')} /> )}}/>
@@ -43,7 +53,7 @@ const TabNav = () => {
       <Tab.Screen name="Settings"  component={SettingsScreen} options={{tabBarLabel:"Settings", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/feedback.png')} /> )}}/>
   </Tab.Navigator>
   );
-}
+}*/
 
 export default function App() {
   const [loaded] = useFonts({

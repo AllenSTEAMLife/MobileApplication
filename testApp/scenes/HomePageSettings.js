@@ -1,10 +1,11 @@
-import { AuthErrorCodes } from '@firebase/auth';
+//import { AuthErrorCodes } from '@firebase/auth';
 import React from 'react'
 import { StyleSheet, Text, View, Pressable } from 'react-native'
 
 import SegmentedControl from 'rn-segmented-control'
 import Colors from '../assets/colors/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 
 const HomePageSettings = ({navigation}) => {
     const [topSelection, setTopSelection] = React.useState(0);

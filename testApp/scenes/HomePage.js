@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import HomePageHeader from './headers/HomePageHeader';
 import ShowDay from './ShowDay.js';
 import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 
 const websiteURL = "https://life.allencs.org";
 const officialSTEAMURL = "https://www.allenisd.org/steamcenter";
@@ -31,11 +32,11 @@ const HomePage = () => {
             </TouchableOpacity>
         );
     };
-    const getEvents = async () => {
+    const getDayData = async () => {
         try {
-            const response = await fetch('https://roboticsdev1584.github.io/RetroCycle/Assets/day.json');
+            const response = await fetch('https://life.allencs.org/day/json');
             const json = await response.json();
-            const dayData = json["dayList"];
+            const dayData = json["Items"];
             setData(dayData);
         } catch (error) {
             console.error(error);
@@ -46,13 +47,12 @@ const HomePage = () => {
         const today = new Date();
         const currentDay = today.getDate();
         const currentMonth = (today.getMonth()) + 1;
-        const currentYear = today.getFullYear() - (Math.floor(today.getFullYear() / 100)) * 100;
+        const currentYear = today.getFullYear();
         for (var index = 0; index < newData.length; index++) {
-            var tempDate2 = Object.keys(newData[index])[0];
-            var tempDate = tempDate2.split("/");
+            var dateArr = newData[index]["Day"].split("/");
             //if the current date has been found
-            if ((parseInt(tempDate[0]) == currentMonth) && (parseInt(tempDate[1]) == currentDay) && (parseInt(tempDate[2]) == currentYear)) {
-                const thisDay = newData[index][tempDate2];
+            if ((parseInt(dateArr[0]) == currentMonth) && (parseInt(dateArr[1]) == currentDay) && (parseInt(dateArr[2]) == currentYear)) {
+                const thisDay = newData[index]["Type"];
                 setDay(thisDay);
                 switch (thisDay) {
                     case "A": //set to red on a days
@@ -72,11 +72,11 @@ const HomePage = () => {
         }
     }
     React.useEffect(() => {
-        getEvents();
+        getDayData();
         if (data.length > 0) {
             updateDayBox(data);
         }
-    }, []);
+    });
 
     return (
         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -99,9 +99,11 @@ const HomePage = () => {
                 <View style={{ paddingVertical: 15 }} />
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                     <View style={styles.homepageBottomRectangle} >
-                        <OpenURLButton url={websiteURL} buttonStyle={styles.openUrlBtn} textStyle={styles.openUrlText}>
-                            Visit Website
-                        </OpenURLButton>
+                        <TouchableOpacity style={styles.openUrlBtn} onPress={() => { Linking.openURL('https://life.allencs.org'); }}>
+                            <View>
+                                <Text style={styles.openUrlText}>Visit Website</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <View style={{ marginVertical: 15 }} />

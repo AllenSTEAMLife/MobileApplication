@@ -4,6 +4,7 @@ import {
     Text,
     StyleSheet,
 } from 'react-native';
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 
 const CalendarHeader = () => {
     return (
@@ -21,7 +22,7 @@ const CalendarHeader = () => {
 const styles = StyleSheet.create({
     titleText: {
         marginTop: 50,
-        fontSize: 35,
+        fontSize: 32,
         fontFamily: "Montserrat-SemiBold"
     }
 });

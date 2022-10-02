@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification} from 'firebase/auth';
+//import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification} from 'firebase/auth';
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 
 const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('')

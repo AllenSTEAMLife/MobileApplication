@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import event from '../assets/models/event';
 import EventItem from '../assets/models/eventItem.js';
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 
 const ShowView = (props) => {
     const { eventList, show, text } = props;

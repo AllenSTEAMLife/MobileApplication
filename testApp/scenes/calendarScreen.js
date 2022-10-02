@@ -14,6 +14,8 @@ import event from '../assets/models/event';
 import EventItem from '../assets/models/eventItem.js';
 import SegmentedControl from 'rn-segmented-control';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
+import { getUserData } from '../assets/models/userSignInfo';
 
 const CalendarScreen = () => {
     const [data, setData] = React.useState([]);
@@ -28,25 +30,60 @@ const CalendarScreen = () => {
     const [reloadCount, setReloadCount] = React.useState(0);
     const [tabIndex, setTabIndex] = React.useState(0);
     const [showCalendar, setShowCalendar] = React.useState(true);
+    const [usersEmail, setUsersEmail] = React.useState("");
+    const [usersName, setUsersName] = React.useState("");
+    const [usersClubs, setUsersClubs] = React.useState([]);
 
     const handleTabChange = (index) => {
         setTabIndex(index);
-        
+        dataFromStorage();
     };
+    function sortItems(thisDataArr) {
+        var latestDate = new Date(0, 0, 0, 0, 0, 0, 0);
+        for (var index = 0; index < thisDataArr.length; index++) {
+            latestDate = new Date(0, 0, 0, 0, 0, 0, 0);
+            for (var index2 = index; index2 < thisDataArr.length; index2++) {
+                var thisStartDateArr = thisDataArr[index2]["Start-Date"].split("/");
+                var thisStartTimeArr = thisDataArr[index2]["Start-Time"].split(":");
+                var thisDate = new Date(thisStartDateArr[2], thisStartDateArr[0], thisStartDateArr[1], thisStartTimeArr[0], thisStartTimeArr[1], 0, 0);
+                if (thisDate > latestDate) {
+                    latestDate = thisDate;
+                    var tempItem = thisDataArr[index];
+                    thisDataArr[index] = thisDataArr[index2];
+                    thisDataArr[index2] = tempItem;
+                }
+            }
+        }
+        return thisDataArr;
+    }
 
     const dataFromStorage = async () => {
         try {
-            const asyncData = await AsyncStorage.getItem('calendarEvents');
-            setData(asyncData);
+            /*const asyncData = await AsyncStorage.getItem('calendarEvents');
+            setData(asyncData);*/
             const eventData = await AsyncStorage.getItem('eventState');
             var eventState = false;
-            if (eventData == null) {
-                await AsyncStorage.setItem('eventState', `${false}`);
-            }
-            else {
-                eventState = (eventData == 'true');
-            }
+            var userEmail = "";
+            var userName = "";
+            getUserData().then((data) => {
+                try {
+                    setUsersEmail(data[0]);
+                    userEmail = data[0];
+                    setUsersName(data[1]);
+                    userName = data[1];
+                } catch (error) { console.log("error: "+error); }
+            });
             setShowEvents(eventState);
+            const response2 = await fetch('https://life.allencs.org/user/json?userAuthorized=true');
+            const clubJson = await response2.json();
+            const usersArr = clubJson["Items"];
+            var userClub = [];
+            for (var index = 0; index < usersArr.length; index++) {
+                if (usersArr[index]["User-Email"] == userEmail) {
+                    userClub = usersArr[index]["Clubs-Joined"];
+                }
+            }
+            setUsersClubs(userClub);
         } catch (error) {
             console.error(error);
         }
@@ -58,7 +95,7 @@ const CalendarScreen = () => {
     }
     const getEvents = async () => {
         try {
-            const response = await fetch('https://roboticsdev1584.github.io/RetroCycle/Assets/events.json');
+            const response = await fetch('https://life.allencs.org/events/json');
             const json = await response.json();
             const eventItems = json["Items"];
             setData(eventItems);
@@ -70,6 +107,15 @@ const CalendarScreen = () => {
         } catch (error) {
             console.error(error);
         } finally { }
+    }
+    function clubInArray(clubArr, clubId) {
+        for (var index=0; index < clubArr.length; index++) {
+            if ((clubArr[index] == clubId) || (clubArr[index] == "All")) {
+                return true;
+            }
+        }
+        if (clubId == 0) { return true; }
+        return false;
     }
     const updateEvents = (dataArr) => {
         var eventsArr = [];
@@ -85,12 +131,13 @@ const CalendarScreen = () => {
                     let day = dayArr[1];
                     let month = dayArr[0];
                     let year = dayArr[2];
+                    let eventClubId = event["Club"];
                     var startDate = new Date(parseInt(year), parseInt(month)-1, parseInt(day), 0, 0, 0, 0);
                     var endDateFound = false;
                     var endDate = new Date();
                     try {
                         let endDateArr = event["End-Date"].split("/");
-                        endDate = new Date(parseInt(endDateArr[2]), parseInt(endDateArr[0])-1, parseInt(endDateArr[1], 23, 59, 59, 0));
+                        endDate = new Date(parseInt(endDateArr[2]), parseInt(endDateArr[0])-1, parseInt(endDateArr[1]), 23, 59, 59, 0);
                         endDateFound = true;
                     } catch(error) { console.log("had error: "+error); }
                     if (!endDateFound) {
@@ -98,17 +145,28 @@ const CalendarScreen = () => {
                         var todayLocale = today.toLocaleString();
                         var sDateLocale = startDate.toLocaleString();
                         var yesterdayLocale = yesterday.toLocaleString();
-
-                        if (startDate >= today) {
-                            allEventsArr.push(event);
-                        }
-                        if (startDate <= today && startDate > yesterday) {
-                            eventsTodayArr.push(event);
+                        //if user is signed in only show their club's events
+                        if (usersEmail != "" && usersEmail != null) {
+                            if (clubInArray(usersClubs, eventClubId)) {
+                                if (startDate >= today) {
+                                    eventsArr.push(event);
+                                }
+                                if (startDate <= today && startDate > yesterday) {
+                                    eventsTodayArr.push(event);
+                                }
+                            }                            
+                        } else {
+                            if (startDate >= today) {
+                                eventsArr.push(event);
+                            }
+                            if (startDate <= today && startDate > yesterday) {
+                                eventsTodayArr.push(event);
+                            }
                         }
                         if (selectedDay != undefined) {
-                            var selectedDayObj = new Date(selectedDay.year, selectedDay.month, selectedDay.day, 0, 0, 0, 0);
+                            var selectedDayObj = new Date(selectedDay.year, selectedDay.month-1, selectedDay.day, 0, 0, 0, 0);
                             if (selectedDayObj == startDate) {
-                                eventsArr.push(event);
+                                allEventsArr.push(event);
                                 AsyncStorage.setItem('eventState', `${true}`);
                             }
                         }
@@ -118,30 +176,42 @@ const CalendarScreen = () => {
                         var sDateLocale = startDate.toLocaleString();
                         var eDateLocale = endDate.toLocaleString();
                         var yesterdayLocale = yesterday.toLocaleString();
-
-                        if (endDate >= today) {
-                            allEventsArr.push(event);
-                        }
-                        if ((startDate <= today && startDate > yesterday) && (endDate >= today)) {
-                            eventsTodayArr.push(event);
+                        //if user is signed in only show their club's events
+                        if (usersEmail != "" && usersEmail != null) {
+                            console.log("club in array: "+clubInArray(usersClubs, eventClubId));
+                            if (clubInArray(usersClubs, eventClubId)) {
+                                if (endDate >= today) {
+                                    eventsArr.push(event);
+                                }
+                                if (startDate <= today && endDate >= today) {
+                                    eventsTodayArr.push(event);
+                                }
+                            }                            
+                        } else {
+                            if (endDate >= today) {
+                                eventsArr.push(event);
+                            }
+                            if (startDate <= today && endDate >= today) {
+                                eventsTodayArr.push(event);
+                            }
                         }
                         if (selectedDay != undefined) {
-                            var selectedDayObj = new Date(selectedDay.year, selectedDay.month, selectedDay.day, 0, 0, 0, 0);
+                            var selectedDayObj = new Date(selectedDay.year, selectedDay.month-1, selectedDay.day, 0, 0, 0, 0);
                             if (selectedDayObj >= startDate && selectedDayObj <= endDate) {
-                                eventsArr.push(event);
+                                allEventsArr.push(event);
                                 AsyncStorage.setItem('eventState', `${true}`);
                             }
                         }
                     }
                 });
             }
-            if (eventsArr.length > 0) { setShowEvents(true);
+            if (allEventsArr.length > 0) { setShowEvents(true);
                 setShowEventsList(true); }
             else { setShowEvents(false);
                 setShowEventsList(false); }
-            setEvents(eventsArr);
-            setTodayEvents(eventsTodayArr);
-            setAllEvents(allEventsArr);
+            setEvents(sortItems(eventsArr));
+            setTodayEvents(sortItems(eventsTodayArr));
+            setAllEvents(sortItems(allEventsArr));
         }
         catch (error) {
             console.log("Error found: " + error);
@@ -166,11 +236,6 @@ const CalendarScreen = () => {
     }
 
     React.useEffect(() => {
-        //only run once
-        if (reloadCount == 0) {
-            dataFromStorage();
-            setReloadCount(1);
-        }
         getEvents();
         if (data.length > 0) {
             updateEvents(data);
@@ -289,7 +354,6 @@ const CalendarScreen = () => {
                             />
                         </View>
                         <View style={{ height: 1, backgroundColor: Colors.GRAY, marginTop: 10, marginLeft: 15, marginRight: 15 }} />
-                        
                     </ShowViewLimited>
                     <View style={{ alignItems: 'center', flexDirection:'row', justifyContent:'center' }}>
                             <Pressable style={styles.eventsButton} onPress={toggleCalendarView}>
@@ -299,7 +363,7 @@ const CalendarScreen = () => {
                         <FlatList
                             scrollEnabled={true}
                             style={styles.eventListing}
-                            data={events}
+                            data={allEvents}
                             renderItem={({ item }) => <EventItem title={item["Event-Name"]} date={`${item["Start-Date"]},${item["Start-Time"]},${item["End-Date"]},${item["End-Time"]}`} message={item["Description"]} />}
                             keyExtractor={(key, index) => index.toString()}
                         />
@@ -308,7 +372,7 @@ const CalendarScreen = () => {
                         <FlatList
                             scrollEnabled={true}
                             style={styles.eventListing}
-                            data={allEvents}
+                            data={events}
                             renderItem={({ item }) => <EventItem title={item["Event-Name"]} date={`${item["Start-Date"]},${item["Start-Time"]},${item["End-Date"]},${item["End-Time"]}`} message={item["Description"]} />}
                             keyExtractor={(key, index) => index.toString()}
                         />

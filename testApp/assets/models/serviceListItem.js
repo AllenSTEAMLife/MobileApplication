@@ -110,7 +110,7 @@ const ServiceListItem = (props) => {
 const styles = StyleSheet.create({
     viewStyle: {
         width: 300,
-        height: 111,
+        height: 144,
         backgroundColor: Colors.WHITE,
         borderRadius: 10,
         paddingLeft: 10,

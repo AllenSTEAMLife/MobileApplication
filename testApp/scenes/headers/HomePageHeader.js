@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Colors from '../../assets/colors/Colors';
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 
 const HomePageHeader = () => {
     return (
