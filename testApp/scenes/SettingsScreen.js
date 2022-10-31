@@ -167,7 +167,7 @@ const SettingsScreen = ({ navigation }) => {
           </Pressable>
         </View>
         <View style={styles.optionView}>
-          <Pressable style={{ width: '100%' }} onPress={() => { Linking.openURL('https://forms.gle/JrvYqouQmeJisK916') }}>
+          <Pressable style={{ width: '100%' }} onPress={() => { Linking.openURL('https://docs.google.com/forms/d/e/1FAIpQLSfbNEmd550_KIxMN7WiWmv8QjlpEix9WSwne2OnYT3uhgvWSA/viewform') }}>
             <View>
               <Text style={styles.optionText}>Feedback</Text>
             </View>
