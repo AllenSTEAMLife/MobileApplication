@@ -11,6 +11,7 @@ npm-debug.*
 web-build/
 app.json
 firebase.js
+config.js
 GoogleService-Info.plist
 old-app.json
 Old-GoogleService-Info.plist
