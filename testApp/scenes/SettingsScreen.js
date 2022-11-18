@@ -44,54 +44,6 @@ const SettingsScreen = ({ navigation }) => {
   const [signOutTimes, setSignOutTimes] = React.useState(0);
   //state = { user: null };
 
-  //keep this
-  /*
-
-  const signIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log("userinfo: "+userInfo);
-      await AsyncStorage.setItem('userEmail', `${userInfo.user.email}`);
-      await AsyncStorage.setItem('userName', `${userInfo.user.name}`);
-      console.log("successfully signed in!");
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-      }
-    }
-  };
-
-  const signOut = async () => {
-    try {
-      await GoogleSignin.signOut();
-      await AsyncStorage.setItem('userEmail', ``);
-      await AsyncStorage.setItem('userName', ``);
-      console.log("successfully signed out!");
-    } catch (error) {
-      console.error(error);
-    }
-  };*/
-  /*
-  const signIn = async () => {
-    try {
-      const result = await Google.logInAsync(config);
-
-      if (result.type === "success") {
-        setAccessTokenS(result.accessToken);
-        console.log("user: "+result.user);
-        //await AsyncStorage.setItem('userEmail', `${userInfo.user.email}`);
-        //await AsyncStorage.setItem('userName', `${userInfo.user.name}`);
-      }
-    } catch (error) { console.log(error); }
-  };*/
-
   
 
   React.useEffect(() => {
@@ -114,6 +66,7 @@ const SettingsScreen = ({ navigation }) => {
     });
     userInfoResponse.json().then(data => {
       setUserInfo(data);
+      
       setUserDetails(data.email, data.name);
     });
     setSignInTimes(signInTimes+1);

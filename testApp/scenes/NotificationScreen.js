@@ -110,8 +110,12 @@ const NotificationScreen = () => {
                             } catch (error) { dateString += " "; }
                             var newEventItem = new notification(event["Event-Name"], "O", dateString, event["Description"]);
                             if (tabIndex == 1 || tabIndex == 3) {
+                                console.log("here");
                                 if (usersEmail != "" && usersEmail != null) {
+                                    console.log("usersClubs: "+usersClubs);
+                                    console.log("eventClubId: "+eventClubId);
                                     if (clubInArray(usersClubs, eventClubId)) {
+                                        console.log("pushing");
                                         events.push(newEventItem);
                                     }
                                 } else {
@@ -363,6 +367,7 @@ const NotificationScreen = () => {
 
     React.useEffect(() => {
         setNotificationItems([]);
+        console.log("changed tab");
         getEvents();
         getServices();
         getOverallClubs();
