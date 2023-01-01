@@ -19,10 +19,34 @@ import { getUserData } from '../assets/models/userSignInfo';
 
 const CalendarScreen = () => {
     const [data, setData] = React.useState([]);
+    const [markedDayList, setMarkedDayList] = React.useState({});
     const [showEvents, setShowEvents] = React.useState(false);
     const [showEventsList, setShowEventsList] = React.useState(false);
     const [showUpcoming, setShowUpcoming] = React.useState(true);
-    const [selectedDay, setSelectedDay] = React.useState();
+    //set the initially selected day to today
+    var todaysDate = new Date();
+    var todaysDay = todaysDate.getDate();
+    var tDayZeroString = "";
+    if (todaysDay < 10) {
+        tDayZeroString = "0";
+    }
+    var todaysMonth = todaysDate.getMonth()+1;
+    var tMonthZeroString = "";
+    if (todaysMonth < 10) {
+        tMonthZeroString = "0";
+    }
+    var todaysYear = todaysDate.getFullYear();
+    var todaysTimestamp = Date.UTC(todaysYear, todaysMonth, todaysDay);
+    var todaysDateString = `${todaysYear}-${tMonthZeroString}${todaysMonth}-${tDayZeroString}${todaysDay}`;
+    const [selectedDay, setSelectedDay] = React.useState(
+        {
+            day: todaysDay,
+            month: todaysMonth,
+            year: todaysYear,
+            timestamp: todaysTimestamp,
+            dateString: todaysDateString
+          }
+    );
     const [events, setEvents] = React.useState([]);
     const [todayEvents, setTodayEvents] = React.useState([]);
     const [allEvents, setAllEvents] = React.useState([]);
@@ -33,6 +57,8 @@ const CalendarScreen = () => {
     const [usersEmail, setUsersEmail] = React.useState("");
     const [usersName, setUsersName] = React.useState("");
     const [usersClubs, setUsersClubs] = React.useState([]);
+
+    var monthArray = ["September", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
     const handleTabChange = (index) => {
         setTabIndex(index);
@@ -178,7 +204,7 @@ const CalendarScreen = () => {
                         var yesterdayLocale = yesterday.toLocaleString();
                         //if user is signed in only show their club's events
                         if (usersEmail != "" && usersEmail != null) {
-                            console.log("club in array: "+clubInArray(usersClubs, eventClubId));
+                            //console.log("club in array: "+clubInArray(usersClubs, eventClubId));
                             if (clubInArray(usersClubs, eventClubId)) {
                                 if (endDate >= today) {
                                     eventsArr.push(event);
@@ -216,6 +242,55 @@ const CalendarScreen = () => {
         catch (error) {
             console.log("Error found: " + error);
         }
+        //mark the days with events on the calendar
+        try {
+            if (dataArr && dataArr.length > 0) {
+                var markedDaysJson = {};
+                dataArr.forEach(event => {
+                    let dayArr = event["Start-Date"].split("/");
+                    let day = dayArr[1];
+                    let month = dayArr[0];
+                    let year = dayArr[2];
+                    var startDate = new Date(parseInt(year), parseInt(month)-1, parseInt(day), 0, 0, 0, 0);
+                    var endDateFound = false;
+                    var endDate = new Date();
+                    var monthZeroString = "";
+                    var dayZeroString = "";
+                    try {
+                        let endDateArr = event["End-Date"].split("/");
+                        endDate = new Date(parseInt(endDateArr[2]), parseInt(endDateArr[0])-1, parseInt(endDateArr[1]), 23, 59, 59, 0);
+                        endDateFound = true;
+                    } catch(error) { console.log("had error: "+error); }
+                    if (!endDateFound) {
+                        if (month < 10) { monthZeroString = "0"; }
+                        if (day < 10) { dayZeroString = "0"; }
+                        markedDaysJson[`${year}-${monthZeroString}${month}-${dayZeroString}${day}`] = {marked: true};
+                    } else {
+                        //increment through dates that the event spans
+                        for (var indexDate = startDate; indexDate <= endDate; indexDate.setDate(indexDate.getDate()+1)) {
+                            var thisYear = indexDate.getFullYear();
+                            var thisMonth = indexDate.getMonth()+1;
+                            var thisDay = indexDate.getDate();
+                            if (thisMonth < 10) { monthZeroString = "0"; }
+                            if (thisDay < 10) { dayZeroString = "0"; }
+                            markedDaysJson[`${thisYear}-${monthZeroString}${thisMonth}-${dayZeroString}${thisDay}`] = {marked: true};
+                        }
+                    }
+                });
+                markedDaysJson[selectedDay] = { selected: true, disableTouchEvent: true };
+                setMarkedDayList(markedDaysJson);
+            }
+            if (allEventsArr.length > 0) { setShowEvents(true);
+                setShowEventsList(true); }
+            else { setShowEvents(false);
+                setShowEventsList(false); }
+            setEvents(sortItems(eventsArr));
+            setTodayEvents(sortItems(eventsTodayArr));
+            setAllEvents(sortItems(allEventsArr));
+        }
+        catch (error) {
+            console.log("Error found: " + error);
+        }
     }
     const toggleUpcoming = () => {
         const currentUpcoming = showUpcoming;
@@ -233,6 +308,9 @@ const CalendarScreen = () => {
         else {
             setShowEventsList(!currentEventsList);
         }
+    }
+    const getMonthName = (monthNumber) => {
+        return monthArray[monthNumber-1];
     }
 
     React.useEffect(() => {
@@ -340,15 +418,27 @@ const CalendarScreen = () => {
                                 // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
                                 monthFormat={'yyyy MM'}
                                 // Handler which gets executed when visible month changes in calendar. Default = undefined
-                                onMonthChange={(month) => { console.log('month changed', month) }}
-                                // Hide month navigation arrows. Default = false
-                                hideArrows={true}
+                                
+                                initialDate = {selectedDay["dateString"]}
+
+                                markedDates={markedDayList}
 
                                 hideExtraDays={true}
 
+                                enableSwipeMonths={true}
+
                                 disableMonthChange={false}
 
-                                renderHeader={() => { }}
+                                renderHeader={(day) => { 
+                                    var day = day.toString();
+                                    var splitDay = day.split(" ");
+                                    //fix the header text if it using the werid date format
+                                    if (day.indexOf(",") == -1) {
+                                        return <Text>{splitDay[1] + " " + splitDay[3]}</Text>
+                                    } else {
+                                        return <Text>{splitDay[2] + " " + splitDay[3]}</Text>
+                                    }
+                                }}
 
                                 theme={styles.calendarStyle}
                             />
