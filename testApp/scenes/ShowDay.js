@@ -7,8 +7,14 @@ import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 const ShowDay = (props) => {
     const { text, color, textColor } = props;
     var newTextColor = textColor;
+    var dayText = "";
     if (textColor == "") {
         newTextColor = "black";
+    }
+    if (text == "") {
+        dayText = "Welcome";
+    } else {
+        dayText = text + " Day";
     }
     const styles = StyleSheet.create({
         dayBox: {
@@ -40,7 +46,7 @@ const ShowDay = (props) => {
 
     return (
         <View style={styles.dayBox}>
-            <Text style={styles.dayText}>{text} Day</Text>
+            <Text style={styles.dayText}>{dayText}</Text>
         </View>
     );
 };

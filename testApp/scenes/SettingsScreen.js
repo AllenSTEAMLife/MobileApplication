@@ -20,6 +20,7 @@ export const isAndroid = () => Platform.OS === 'android';
 import Colors from '../assets/colors/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ViewPropTypes} from 'deprecated-react-native-prop-types';
+import SettingsHeader from './headers/SettingsHeader';
 
 /*import {
   GoogleSignin,
@@ -42,14 +43,34 @@ const SettingsScreen = ({ navigation }) => {
   const [signInTimes, setSignInTimes] = React.useState(0);
   const [signOutTxt, setSignOutTxt] = React.useState("Sign Out");
   const [signOutTimes, setSignOutTimes] = React.useState(0);
+  const [showSignOut, setShowSignOut] = React.useState(false);
   //state = { user: null };
 
   
+
+  var firstTime = true;
+
+  const getUserDetails = async () => {
+    var userEmail = "";
+    var userName = "";
+    try {
+      userEmail = await AsyncStorage.getItem('userEmail');
+      userName = await AsyncStorage.getItem('userName');
+    } catch (error) { console.log("error: "+error); }
+    if (userEmail != undefined && userName != undefined) {
+      setShowSignOut(true);
+    }
+  }
 
   React.useEffect(() => {
     if (response?.type === 'success') {
       setAccessToken(response.authentication.accessToken);
       getUserData();
+    }
+    if (firstTime) {
+      setShowSignOut(false);
+      firstTime = false;
+      getUserDetails();
     }
   }, [response]);
 
@@ -72,6 +93,7 @@ const SettingsScreen = ({ navigation }) => {
     setSignInTimes(signInTimes+1);
     if (signInTimes == 1) {
       setSignInTxt("Sign In");
+      setShowSignOut(true);
     }
   }
 
@@ -84,11 +106,26 @@ const SettingsScreen = ({ navigation }) => {
     } catch (error) { console.log(error); }
   };
 
+  const ShowViewLimited = (props) => {
+    const { show, styling, children } = props;
+    if (!show) {
+        return (
+            <View style={{ display:'none' }}></View>
+        );
+    }
+    return (
+        <View style={ styling }>
+            { children }
+        </View>
+    );
+  }
+
   return (
     <View>
       <View style={styles.spacing}>
       </View>
       <View style={styles.background}>
+        <SettingsHeader />
         <View style={styles.user}>
           <Image style={styles.userIcon} source={require('../assets/images/steamLifeIcon.png')} />
           <Pressable style={styles.signinoutButton} onPress={accessToken ? getUserData : () => { setSignInTimes(0);promptAsync({showInRecents: true});setSignInTxt("Confirm Sign In"); }}>
@@ -126,11 +163,11 @@ const SettingsScreen = ({ navigation }) => {
             </View>
           </Pressable>
         </View>
-        <View style={styles.optionView}>
-            <Pressable onPress={accessToken ? () => {signOut();} : () => {console.log("already signed out");} }>
-              <Text style={styles.optionText}>{ signOutTxt }</Text>
-            </Pressable>
-        </View>
+        <ShowViewLimited show={showSignOut} styling={styles.optionView}>
+          <Pressable onPress={accessToken ? () => {signOut();} : () => {setShowSignOut(false);console.log("already signed out");} }>
+            <Text style={styles.optionText}>{ signOutTxt }</Text>
+          </Pressable>
+        </ShowViewLimited>
       </View>
     </View>
   );
@@ -138,7 +175,7 @@ const SettingsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   spacing: {
     width: '100%',
-    height: 50,
+    height: 20,
     backgroundColor: '#d0e0ff',
   },
   background: {

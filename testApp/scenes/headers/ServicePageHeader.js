@@ -22,7 +22,7 @@ const Header = () => {
 const styles = StyleSheet.create({
     titleText: {
         marginTop: 50,
-        fontSize: 32,
+        fontSize: 28,
         fontFamily: "Montserrat-SemiBold"
     }
 });

@@ -28,7 +28,7 @@ const HomePageHeader = () => {
                 
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View style={{flex: 1, height: 2, backgroundColor: Colors.GRAY, marginTop: 10, marginLeft: 10, marginRight: 10}} />
+                <View style={{flex: 1, height: 2, backgroundColor: Colors.GRAY, marginTop: 6, marginLeft: 10, marginRight: 10}} />
             </View>
         </View>
     )
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
       },
       titleText: {
           marginTop: 50,
-          fontSize: 40,
+          fontSize: 36,
           fontFamily: "Montserrat-ExtraBold"
           
       }

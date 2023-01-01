@@ -25,18 +25,6 @@ initializeApp(firebaseConfig);*/
 LogBox.ignoreLogs(["AsyncStorage has been extracted from react-native core and will be removed in a future release. It can now be installed and imported from '@react-native-async-storage/async-storage' instead of 'react-native'. See https://github.com/react-native-async-storage/async-storage"]);
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
-const SettingsStack = () => {
-  return(
-  <Stack.Navigator initialRouteName='Settings' screenOptions={{headerShown: false}}>
-    {/*<Stack.Screen name='TabNav' component={TabNav}/>*/}
-    <Stack.Screen name='Settings' component={SettingsScreen}/>
-    <Stack.Screen name='LogIn' component={LoginScreen}/>
-          <Stack.Screen name='Notification' component={NotificationScreen}/>
-          {/* <Stack.Screen name='Feedback' component={feedbackScreen}/> */}
-        </Stack.Navigator>
-        );
-}
 
 /*
   This line was directly under and had same tab indentation as 'name='Notification'':
@@ -74,13 +62,8 @@ export default function App() {
       <Tab.Screen name="Notifications" component={NotificationScreen} options={{tabBarLabel:"Notifications", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/notif.png')} /> )}}/>
       <Tab.Screen name="Service"  component={ServiceScreen} options={{tabBarLabel:"Service", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/listings.png')} /> )}}/>
       <Tab.Screen name="Calendar"  component={CalendarScreen} options={{tabBarLabel:"Calendar", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/calendar.png')} /> )}}/>
-      <Tab.Screen name="Settings"  component={SettingsStack} options={{tabBarLabel:"Settings", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/feedback.png')} /> )}}/>
+      <Tab.Screen name="Settings"  component={SettingsScreen} options={{tabBarLabel:"Settings", tabBarIcon: (focused, tintColor) => (<Image style={{ width:30, height: 30, marginTop: 10 }} source={require('./assets/images/feedback.png')} /> )}}/>
   </Tab.Navigator>
       </NavigationContainer>
     );
   }
-
-
-
-
-
