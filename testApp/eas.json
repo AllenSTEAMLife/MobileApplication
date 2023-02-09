@@ -6,6 +6,9 @@
     "previewA": {
       "android": {
         "buildType": "apk"
+      },
+      "ios": {
+        "resourceClass": "m1-medium"
       }
     },
     "development": {
@@ -14,20 +17,29 @@
         "gradleCommand": ":app:assembleDebug"
       },
       "ios": {
-        "buildConfiguration": "Debug"
+        "buildConfiguration": "Debug",
+        "resourceClass": "m1-medium"
       }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "ios": {
+        "simulator": true,
+        "resourceClass": "m1-medium"
+      }
     },
     "production": {
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
+      "resourceClass": "medium",
+      "ios": {
+        "resourceClass": "m1-medium"
       }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        
+      }
+    }
   }
 }

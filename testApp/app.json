@@ -1,43 +1,43 @@
 {
-    "expo": {
-      "name": "STEAM Life",
-      "slug": "STEAM-Life",
-      "version": "1.0.0",
-      "orientation": "portrait",
-      "icon": "./assets/icon2.png",
-      "splash": {
-        "image": "./assets/splash2.png",
-        "resizeMode": "contain",
-        "backgroundColor": "#ffffff"
+  "expo": {
+    "name": "STEAM Life",
+    "slug": "STEAM-Life",
+    "version": "1.5.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon2.png",
+    "splash": {
+      "image": "./assets/splash2.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "scheme":"exp",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.allencs.steam-life",
+      "buildNumber": "1.6.0",
+      "config": {}
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon2.png",
+        "backgroundColor": "#FFFFFF"
       },
-      "updates": {
-        "fallbackToCacheTimeout": 0
-      },
-      "assetBundlePatterns": [
-        "**/*"
-      ],
-      "ios": {
-        "supportsTablet": true,
-        "bundleIdentifier": "org.life.allencsmobile",
-        "buildNumber": "1.0.0",
-        "config": {}
-      },
-      "android": {
-        "adaptiveIcon": {
-          "foregroundImage": "./assets/adaptive-icon2.png",
-          "backgroundColor": "#FFFFFF"
-        },
-        "package": "org.life.allencsmobile"
-      },
-      "web": {
-        "favicon": "./assets/favicon2.png"
-      },
-      "plugins": [],
-      "extra": {
-        "eas": {
-          
-        }
+      "package": "org.life.allencsmobile"
+    },
+    "web": {
+      "favicon": "./assets/favicon2.png"
+    },
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "2e13e3d9-9cfc-4cb7-ab3b-e82113a20682"
       }
     }
   }
-  
+}

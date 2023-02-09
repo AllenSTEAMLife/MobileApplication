@@ -46,7 +46,9 @@ const SettingsScreen = ({ navigation }) => {
   const [showSignOut, setShowSignOut] = React.useState(false);
   //state = { user: null };
 
-  
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    
+  });
 
   var firstTime = true;
 
