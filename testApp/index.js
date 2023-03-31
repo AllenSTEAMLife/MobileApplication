@@ -1,3 +1,4 @@
+import './rn-polyfill-deprecated-proptypes.js';
 import 'react-native-gesture-handler';
 import { registerRootComponent } from 'expo';
 

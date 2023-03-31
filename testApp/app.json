@@ -2,7 +2,7 @@
   "expo": {
     "name": "STEAM Life",
     "slug": "STEAM-Life",
-    "version": "1.5.0",
+    "version": "1.7.0",
     "orientation": "portrait",
     "icon": "./assets/icon2.png",
     "splash": {
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.allencs.steam-life",
-      "buildNumber": "1.6.0",
+      "buildNumber": "1.7.0",
       "config": {}
     },
     "android": {
@@ -36,7 +36,7 @@
     "plugins": [],
     "extra": {
       "eas": {
-        "projectId": "2e13e3d9-9cfc-4cb7-ab3b-e82113a20682"
+        
       }
     }
   }
